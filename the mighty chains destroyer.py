@@ -5,7 +5,8 @@ import praw
 print(praw.__version__)
 
 Muck_list = ["muck", "muck.", "muck!", "muck?",
-             "mück", "mück.", "mück!", "mück?"]
+             "mück", "mück.", "mück!", "mück?",
+             "m u c k"]
 IsMuck = False
 
 # initialize with appropriate values
