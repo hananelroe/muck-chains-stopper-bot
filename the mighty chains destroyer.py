@@ -2,11 +2,12 @@
 import thefuzz.fuzz as fuzz
 from thefuzz import *
 import praw
+
 print(praw.__version__)
 
 Muck_list = ["muck", "muck.", "muck!", "muck?",
              "mück", "mück.", "mück!", "mück?",
-             "m u c k"]
+             "m u c k", "m\*ck", "kcum"]
 IsMuck = False
 
 # initialize with appropriate values
@@ -24,6 +25,7 @@ reddit = praw.Reddit(client_id=client_id,
                      user_agent=user_agent)
 
 subreddit = reddit.subreddit("DaniDev")
+print("online")
 for comment in subreddit.stream.comments(skip_existing=True):
     print(comment.body)
     # check if the comment is above 74% muck: (allows 1 wrong letter in a 4 letters word)
@@ -31,5 +33,6 @@ for comment in subreddit.stream.comments(skip_existing=True):
         if fuzz.ratio(comment.body.lower(), item) > 74:
             IsMuck = True
     if IsMuck:
-        comment.reply("#**SHUT**\n___\n ^(I'm just a simple bot that wants to stop muck chains, [here is my source code](https://github.com/hananelroe/muck-chains-stopper-bot))")
+        comment.reply(
+            "#**SHUT**\n___\n ^(I'm just a simple bot that wants to stop muck chains, [here is my source code](https://github.com/hananelroe/muck-chains-stopper-bot))\n\n ^(oh and if you're a real boner - upvote this comment. it helps my karma.)")
         IsMuck = False
