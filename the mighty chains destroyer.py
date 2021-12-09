@@ -6,7 +6,9 @@ print(praw.__version__)
 
 Muck_list = ["muck", "muck.", "muck!", "muck?",
              "mück", "mück.", "mück!", "mück?",
-             "m u c k"]
+             "m u c k", "m uck", "muc k", "mu ck",
+             "muuck", "mu c k"]
+# u/MaybeAnonymousDev added "m uck", "muc k", "mu ck", "muuck", and "mu c k"; note: no need to keep this comment here
 IsMuck = False
 
 # initialize with appropriate values
