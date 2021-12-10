@@ -8,7 +8,6 @@ print(praw.__version__)
 Muck_list = ["muck", "muck.", "muck!", "muck?",
              "mück", "mück.", "mück!", "mück?",
              "m u c k", "m\*ck", "kcum"]
-IsMuck = False
 
 # initialize with appropriate values
 client_id = ""
@@ -16,6 +15,7 @@ client_secret = ""
 username = "DaniDevChainBreaker"
 password = ""
 user_agent = "u/hananelroe's comment chains breaker bot"
+comment_content = "#**SHUT**\n___\n ^(I'm just a simple bot that wants to stop muck chains, [here is my source code](https://github.com/hananelroe/muck-chains-stopper-bot))\n\n ^(oh and if you're a real boner - upvote this comment. it helps my karma.)"
 
 # creating an authorized reddit instance
 reddit = praw.Reddit(client_id=client_id,
@@ -31,8 +31,5 @@ for comment in subreddit.stream.comments(skip_existing=True):
     # check if the comment is above 74% muck: (allows 1 wrong letter in a 4 letters word)
     for item in Muck_list:
         if fuzz.ratio(comment.body.lower(), item) > 74:
-            IsMuck = True
-    if IsMuck:
-        comment.reply(
-            "#**SHUT**\n___\n ^(I'm just a simple bot that wants to stop muck chains, [here is my source code](https://github.com/hananelroe/muck-chains-stopper-bot))\n\n ^(oh and if you're a real boner - upvote this comment. it helps my karma.)")
-        IsMuck = False
+            comment.reply(comment_content)
+            break  # exit Muck_list loop
