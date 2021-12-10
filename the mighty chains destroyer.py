@@ -2,12 +2,11 @@
 import thefuzz.fuzz as fuzz
 from thefuzz import *
 import praw
+import unidecode
 
 print(praw.__version__)
 
-Muck_list = ["muck", "muck.", "muck!", "muck?",
-             "mück", "mück.", "mück!", "mück?",
-             "m u c k", "m\*ck", "kcum"]
+Muck_list = ["muck", "mukk", "m\*ck", "kcum"]
 
 # initialize with appropriate values
 client_id = ""
@@ -33,7 +32,7 @@ while True:
             print(comment.body)
             # check if the comment is above 74% muck: (allows 1 wrong letter in a 4 letters word)
             for item in Muck_list:
-                if fuzz.ratio(comment.body.lower(), item) > 74:
+                if fuzz.ratio(unidecode.unidecode(comment.body.lower().strip().translate(None, string.punctuation)), item) > 74:
                     comment.reply(comment_content)
                     break  # exit Muck_list loop
     except KeyboardInterrupt:  # Ctrl-C - stop
