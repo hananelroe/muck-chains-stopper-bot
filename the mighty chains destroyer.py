@@ -17,19 +17,27 @@ password = ""
 user_agent = "u/hananelroe's comment chains breaker bot"
 comment_content = "#**SHUT**\n___\n ^(I'm just a simple bot that wants to stop muck chains, [here is my source code](https://github.com/hananelroe/muck-chains-stopper-bot))\n\n ^(oh and if you're a real boner - upvote this comment. it helps my karma.)"
 
-# creating an authorized reddit instance
-reddit = praw.Reddit(client_id=client_id,
-                     client_secret=client_secret,
-                     username=username,
-                     password=password,
-                     user_agent=user_agent)
+while True:
+    # creating an authorized reddit instance
+    reddit = praw.Reddit(client_id=client_id,
+                         client_secret=client_secret,
+                         username=username,
+                         password=password,
+                         user_agent=user_agent)
 
-subreddit = reddit.subreddit("DaniDev")
-print("online")
-for comment in subreddit.stream.comments(skip_existing=True):
-    print(comment.body)
-    # check if the comment is above 74% muck: (allows 1 wrong letter in a 4 letters word)
-    for item in Muck_list:
-        if fuzz.ratio(comment.body.lower(), item) > 74:
-            comment.reply(comment_content)
-            break  # exit Muck_list loop
+    subreddit = reddit.subreddit("DaniDev")
+    print("online")
+
+    try:
+        for comment in subreddit.stream.comments(skip_existing=True):
+            print(comment.body)
+            # check if the comment is above 74% muck: (allows 1 wrong letter in a 4 letters word)
+            for item in Muck_list:
+                if fuzz.ratio(comment.body.lower(), item) > 74:
+                    comment.reply(comment_content)
+                    break  # exit Muck_list loop
+    except KeyboardInterrupt:  # Ctrl-C - stop
+        print("Bye!")
+    except Exception as error:  # Any exception
+        print(f"Error: {error}")
+        print("Trying to restart...")
