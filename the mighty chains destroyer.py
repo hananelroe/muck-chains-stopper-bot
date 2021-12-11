@@ -6,7 +6,7 @@ import unidecode
 
 print(praw.__version__)
 
-Muck_list = ["muck", "mukk", "m\*ck", "kcum"]
+Muck_list = ["muck", "mukk", "kcum", "muk"]
 
 # initialize with appropriate values
 client_id = ""
