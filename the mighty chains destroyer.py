@@ -7,7 +7,7 @@ print(praw.__version__)
 
 Muck_list = ["muck", "muck.", "muck!", "muck?",
              "mück", "mück.", "mück!", "mück?",
-             "m u c k", "m\*ck", "kcum"]
+             "m u c k", "m\*ck", "kcum", "mukk"]
 
 # initialize with appropriate values
 client_id = ""
