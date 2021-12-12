@@ -9,7 +9,7 @@ print("\u001b[31;1m" + str(praw.__version__))
 
 Muck_list = ["muck", "muck.", "muck!", "muck?", "mֳ¼ck", "mֳ¼ck.", "mֳ¼ck!", "mukc", "mֳ¼ck?", "m u c k", "m\*ck",
              "kcum", "׀¼uck", "mick", "much", "mcuk"]
-Blocked_users = ["u/DaniDevChainBreaker"]
+Blocked_users = ["DaniDevChainBreaker"]
 
 # initialize with appropriate values
 client_id = ""
@@ -49,7 +49,7 @@ while True:
 
     try:
         for comment in subreddit.stream.comments(skip_existing=True):
-            fixed_comment = noglyph("".join(dict.fromkeys(comment.body.lower())))
+            fixed_comment = noglyph("".join(dict.fromkeys(comment.body.lower()))).replace(" ","").replace("\n","")
             print("\u001b[35;1m" + comment.body + "\u001b[34;1m\t" + fixed_comment + " \u001b[0m" + str(fuzz.ratio(fixed_comment, "muck")) + "%")
             print("u/\u001b[36;1m" + str(comment.author) + "\u001b[0m")
 
