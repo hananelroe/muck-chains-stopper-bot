@@ -17,7 +17,7 @@ username = ""
 password = ""
 user_agent = "u/hananelroe's and u/norecap_bot's comment chains breaker bot"
 comment_content = "#**SHUT**\n___\n ^(I'm just a simple bot that wants to stop muck chains, [here is my source code](https://github.com/hananelroe/muck-chains-stopper-bot))\n\n ^(oh and if you're a real boner - upvote this comment. it helps my karma.)\n^(also here is your IP: 127.0.0.1 LOL)\n^(I'm a collaboration between u/DaniDevChainBreaker and u/norecap_bot)"
-why = "WHY?\n\n^(this is a port of the dani dev chain breaker! we are breaking muck, much, mukc and etc chains)\n\n^(if you're a real boner - upvote this comment. it helps my karma.)"
+why = "WHY?\n\n^(I'm just a simple bot that wants to stop muck chains, [here is my source code](https://github.com/hananelroe/muck-chains-stopper-bot))\n\n ^(oh and if you're a real boner - upvote this comment. it helps my karma.)\n^(also here is your IP: 127.0.0.1 LOL)\n^(I'm a collaboration between u/DaniDevChainBreaker and u/norecap_bot)"
 fixed_comment = ""
 
 class Empty:
