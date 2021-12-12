@@ -45,13 +45,13 @@ while True:
                          user_agent=user_agent)
 
     subreddit = reddit.subreddit("test")
-    print("\033[92monline\u001b[0m")
+    print("\033[92monline\n\u001b[0m")
 
     try:
         for comment in subreddit.stream.comments(skip_existing=True):
             fixed_comment = noglyph("".join(dict.fromkeys(comment.body.lower())))
             print("\u001b[35;1m" + comment.body + "\u001b[34;1m\t" + fixed_comment + " \u001b[0m" + str(fuzz.ratio(fixed_comment, "muck")) + "%")
-            print("u/\u001b[36;1m" + str(comment.author) + "\u001b[0m\n")
+            print("u/\u001b[36;1m" + str(comment.author) + "\u001b[0m")
 
             if parent(comment).author.name == username and comment.body.lower() == "bad bot":
                 comment.reply(why)
@@ -59,11 +59,12 @@ while True:
             else:
                 for item in Muck_list:
                     if fuzz.ratio(fixed_comment, item) > 80:
-                        for user in Blocked_users:
-                            if str(comment.author) not in user:
+                        #for user in Blocked_users: bug fixed!
+                            if str(comment.author) not in Blocked_users:
                                 print("\033[92mMATCH! replying...\u001b[0m")
                                 comment.reply(comment_content)
                                 break
+            print()
     except KeyboardInterrupt:  # Ctrl-C - stop
         print("\u001b[31;1mBye!\u001b[0m")
         break
