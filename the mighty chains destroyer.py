@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 # this bot was made by u/hananelroe on reddit
+# exception handeling and neating the code: u/n1k0nP on reddit
 import thefuzz.fuzz as fuzz
 import praw
 import unicodedata
