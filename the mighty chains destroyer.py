@@ -10,10 +10,10 @@ Muck_list = ["muck", "muck.", "muck!", "muck?",
              "m u c k", "m\*ck", "kcum"]
 
 # initialize with appropriate values
-client_id = ""
-client_secret = ""
+client_id = "bfmkcXi2IZsWfmP9c0OtoA"
+client_secret = "RDQq9Fb802LT19-sLZWVGX49wC0CRg"
 username = "DaniDevChainBreaker"
-password = ""
+password = "BreakDaMuckChains"
 user_agent = "u/hananelroe's comment chains breaker bot"
 comment_content = "#**SHUT**\n___\n ^(I'm just a simple bot that wants to stop muck chains, [here is my source code](https://github.com/hananelroe/muck-chains-stopper-bot))\n\n ^(oh and if you're a real boner - upvote this comment. it helps my karma.)"
 
@@ -38,6 +38,7 @@ while True:
                     break  # exit Muck_list loop
     except KeyboardInterrupt:  # Ctrl-C - stop
         print("Bye!")
+        quit()
     except Exception as error:  # Any exception
         print(f"Error: {error}")
         print("Trying to restart...")
