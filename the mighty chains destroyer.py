@@ -49,7 +49,7 @@ while True:
     try:
         for comment in subreddit.stream.comments(skip_existing=True):
             fixed_comment = noglyph("".join(dict.fromkeys(comment.body.lower())))
-            print("\u001b[35;1m" + comment.body + "\u001b[34;1m\t" + fixed_comment + " \u001b[0m" + str(fuzz.ratio(com, "muck") + "%"))
+            print("\u001b[35;1m" + comment.body + "\u001b[34;1m\t" + fixed_comment + " \u001b[0m" + str(fuzz.ratio(com, "muck")) + "%")
             print("u/\u001b[36;1m" + str(comment.author) + "\u001b[0m\n")
 
             if parent(comment).author.name == username and comment.body.lower() == "bad bot":
