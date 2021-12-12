@@ -20,6 +20,17 @@ comment_content = "#**SHUT**\n___\n ^(I'm just a simple bot that wants to stop m
 why = "WHY?\n\n^(this is a port of the dani dev chain breaker! we are breaking muck, much, mukc and etc chains)\n\n^(if you're a real boner - upvote this comment. it helps my karma.)"
 fixed_comment = ""
 
+class Empty:
+    pass
+
+def parent(child_comment):
+    parent_comment = Empty()
+    parent_comment.author = ""
+    try:
+        parent_comment = child_comment.parent()
+    finally:
+        return (parent_comment)
+
 def noglyph(s):
     return ''.join(c for c in unicodedata.normalize('NFD', s)
                    if unicodedata.category(c) != 'Mn')
@@ -41,7 +52,7 @@ while True:
             print("\u001b[35;1m" + comment.body + "\u001b[34;1m\t" + com + " \u001b[0m" + str(fuzz.ratio(com, "muck") + "%"))
             print("u/\u001b[36;1m" + str(comment.author) + "\u001b[0m\n")
 
-            if comment.parent().author.name == username and comment.body.lower() == "bad bot":
+            if parent(comment).author.name == username and comment.body.lower() == "bad bot":
                 comment.reply(why)
                 break
             else:
