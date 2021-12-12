@@ -44,7 +44,7 @@ while True:
                          user_agent=user_agent)
 
     subreddit = reddit.subreddit("DaniDev")
-    print("\u001b[31;1monline\u001b[0m")
+    print("\033[92monline\u001b[0m")
 
     try:
         for comment in subreddit.stream.comments(skip_existing=True):
