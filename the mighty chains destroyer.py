@@ -6,7 +6,6 @@ import unicodedata
 
 print("\u001b[31;1m" + str(praw.__version__))
 
-# Muck_list = ["#**SHUT**\n___\n ^(I'm just a simple bot that wants to stop muck chains, [here is my source code](https://github.com/hananelroe/muck-chains-stopper-bot))\n\n ^(oh and if you're a real boner - upvote this comment. it helps my karma.)"]
 Muck_list = ["muck", "muck.", "muck!", "muck?", "mֳ¼ck", "mֳ¼ck.", "mֳ¼ck!", "mukc", "mֳ¼ck?", "m u c k", "m\*ck",
              "kcum", "׀¼uck", "mick", "much", "mcuk"]
 Blocked_users = []
