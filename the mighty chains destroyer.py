@@ -49,7 +49,7 @@ while True:
                          password=password,
                          user_agent=user_agent)
 
-    subreddit = reddit.subreddit("test")
+    subreddit = reddit.subreddit("DaniDev")
     print("\033[92monline\u001b[0m")
 
     try:
