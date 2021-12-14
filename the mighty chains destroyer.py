@@ -59,17 +59,22 @@ while True:
             fixed_comment = noglyph("".join(dict.fromkeys(comment.body.lower())))
             print("\u001b[35;1m" + comment.body + "\u001b[34;1m\t" + fixed_comment + " \u001b[0m" + str(
                 fuzz.ratio(fixed_comment, "muck")) + "%")
-            print("u/\u001b[36;1m" + str(comment.author) + "\u001b[0m")
+            if comment.author.name in Blocked_users and IsBlocked:
+                print("u/\u001b[31;1m" + str(comment.author) + "\u001b[92mBLOCKED\u001b[0m")
+                continue
+            else:
+                print("u/\u001b[36;1m" + str(comment.author) + "\u001b[0m")
 
             if parent(comment).author.name == username and comment.body.lower() == "bad bot":
                 comment.reply(why)
-                break
+                continue
             else:
                 for item in Muck_list:
                     if fuzz.ratio(fixed_comment, item) > 74:
                         print("\033[92mMATCH! replying...\u001b[0m\n")
                         comment.reply(comment_content)
                         break
+                continue
     except KeyboardInterrupt:  # Ctrl-C - stop
         print("\u001b[31;1mBye!\u001b[0m")
         break
