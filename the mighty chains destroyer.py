@@ -40,6 +40,8 @@ def noglyph(s):
     return ''.join(c for c in unicodedata.normalize('NFD', s)
                    if unicodedata.category(c) != 'Mn')
 
+def tst(x):
+    pass
 
 while True:
     # creating an authorized reddit instance
@@ -72,7 +74,12 @@ while True:
                 for item in Muck_list:
                     if fuzz.ratio(fixed_comment, item) > 74:
                         print("\033[92mMATCH! replying...\u001b[0m\n")
-                        comment.reply(comment_content)
+                        try:
+                            tst(parent(parent(parent(comment)))
+                        except:
+                            comment.reply(comment_content)
+                        else:
+                            comment.reply("#SHUT")
                         break
                 continue
     except KeyboardInterrupt:  # Ctrl-C - stop
