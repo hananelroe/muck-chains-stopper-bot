@@ -18,7 +18,7 @@ client_secret = DA_SECRETS.client_secret
 username = DA_SECRETS.username
 password = DA_SECRETS.password
 user_agent = "u/hananelroe's and u/norecap_bot's comment chains breaker bot"
-comment_content = "#**SHUT**\n___\n ^(I'm just a simple bot that wants to stop muck chains, [here is my source code](https://github.com/hananelroe/muck-chains-stopper-bot))\n\n ^(oh and if you're a real boner - upvote this comment. it helps my karma.)\n\n^(also here is your IP: 127.0.0.1 LOL)\n\n^(I'm a collaboration between [u/\u200cHananelroe](https://www.reddit.com/u/Hananelore) and [u/\u200cnorecap_bot](https://www.reddit.com/u/norecap_bot))"
+comment_content = "#**SHUT**\n___\n ^(I'm just a simple bot that wants to stop muck chains, [here is my source code](https://github.com/hananelroe/muck-chains-stopper-bot))\n\n ^(oh and if you're a real boner - upvote this comment. it helps my karma.)\n\n^(also here is your IP: 127.0.0.1 LOL)\n\n^(I'm a collaboration between [Hananelroe](https://www.reddit.com/u/Hananelore) and [norecap_bot](https://www.reddit.com/u/norecap_bot))"
 why = "WHY?\n\n^(I'm a collaboration between u/Hananelroe and u/norecap_bot! we are breaking muck, much, mukc and etc chains)\n\n^(if you're a real boner - upvote this comment. it helps my karma.)"
 fixed_comment = ""
 
