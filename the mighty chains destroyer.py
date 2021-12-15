@@ -40,9 +40,6 @@ def noglyph(s):
     return ''.join(c for c in unicodedata.normalize('NFD', s)
                    if unicodedata.category(c) != 'Mn')
 
-def tst(x):
-    pass
-
 while True:
     # creating an authorized reddit instance
     reddit = praw.Reddit(client_id=client_id,
@@ -75,7 +72,7 @@ while True:
                     if fuzz.ratio(fixed_comment, item) > 74:
                         print("\033[92mMATCH! replying...\u001b[0m\n")
                         try:
-                            tst(parent(parent(parent(comment))))
+                            comment.parent().parent().parent()
                         except:
                             comment.reply(comment_content)
                         else:
