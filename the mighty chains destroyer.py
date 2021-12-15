@@ -75,7 +75,7 @@ while True:
                     if fuzz.ratio(fixed_comment, item) > 74:
                         print("\033[92mMATCH! replying...\u001b[0m\n")
                         try:
-                            tst(parent(parent(parent(comment)))
+                            tst(parent(parent(parent(comment))))
                         except:
                             comment.reply(comment_content)
                         else:
