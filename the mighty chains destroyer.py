@@ -73,6 +73,7 @@ while True:
                     if fuzz.ratio(fixed_comment, item) > 74:
                         print("\033[92mMATCH! replying...\u001b[0m\n")
                         comment.reply(comment_content)
+                        comment.upvote()# to counter u/DootBootBot
                         break
                 continue
     except KeyboardInterrupt:  # Ctrl-C - stop
