@@ -8,7 +8,7 @@ import DA_SECRETS
 print("\u001b[31;1m" + str(praw.__version__))
 
 Muck_list = ["muck", "muck.", "muck!", "muck?", "mֳ¼ck", "mֳ¼ck.", "mֳ¼ck!", "mukc", "mֳ¼ck?", "m u c k", "m\*ck",
-             "kcum", "׀¼uck", "much", "mcuk"]
+             "kcum", "׀¼uck", "much", "mcuk", "Thuck", "Thucc", "Tuck", "Thu¼k", "thu¼¼","thuÇ", "thuÇÇ"]
 Blocked_users = ["u/DaniDevChainBreaker", "Hananelroe"]
 Enable_Blocking = False
 
