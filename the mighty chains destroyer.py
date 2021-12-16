@@ -21,7 +21,9 @@ username = DA_SECRETS.username
 password = DA_SECRETS.password
 user_agent = "u/hananelroe's and u/norecap_bot's comment chains breaker bot"
 comment_content = "#**SHUT**\n___\n ^(I'm just a simple bot that wants to stop muck chains, [here is my source code](https://github.com/hananelroe/muck-chains-stopper-bot))\n\n ^(oh and if you're a real boner - upvote this comment. it helps my karma.)\n\n^(also here is your IP: 127.0.0.1 LOL)\n\n^(I'm a collaboration between [Hananelroe](https://www.reddit.com/u/Hananelroe) and [norecap_bot](https://www.reddit.com/u/norecap_bot))"
-why = "WHY?\n\n^(I'm a collaboration between [Hananelroe](https://www.reddit.com/u/Hananelroe) and [norecap_bot](https://www.reddit.com/u/norecap_bot)! we are breaking muck, much, mukc and etc chains)\n\n^(if you're a real boner - upvote this comment. it helps my karma.)"
+content = "\n\n^(I'm a collaboration between [Hananelroe](https://www.reddit.com/u/Hananelroe) and [norecap_bot](https://www.reddit.com/u/norecap_bot)! we are breaking muck, much, mukc and etc chains)\n\n^(if you're a real boner - upvote this comment. it helps my karma.)"
+why = "WHY?" + content
+thanks = "thanks! :)" + content
 fixed_comment = ""
 
 
@@ -66,7 +68,22 @@ while True:
                 if comment.author.name == username:
                     continue
             if parent(comment).author.name == username and comment.body.lower() == "bad bot":
-                comment.reply(why)
+                print("\033[92mbad bot MATCH! replying...\u001b[0m\n")
+                        try:
+                            comment.parent().parent().parent()
+                        except:
+                            comment.reply(why)
+                        else:
+                            comment.reply("WHY?")
+                continue
+            elif parent(comment).author.name == username and comment.body.lower() == "good bot":
+                print("\033[92mbad bot MATCH! replying...\u001b[0m\n")
+                        try:
+                            comment.parent().parent().parent()
+                        except:
+                            comment.reply(thanks)
+                        else:
+                            comment.reply("thanks :)")
                 continue
             else:
                 for item in Muck_list:
