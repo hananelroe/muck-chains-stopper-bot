@@ -77,7 +77,7 @@ while True:
                             comment.reply("WHY?")
                 continue
             elif parent(comment).author.name == username and comment.body.lower() == "good bot":
-                print("\033[92mbad bot MATCH! replying...\u001b[0m\n")
+                print("\033[92mgood bot MATCH! replying...\u001b[0m\n")
                         try:
                             comment.parent().parent().parent()
                         except:
