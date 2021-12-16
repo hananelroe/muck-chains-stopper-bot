@@ -69,21 +69,21 @@ while True:
                     continue
             if parent(comment).author.name == username and comment.body.lower() == "bad bot":
                 print("\033[92mbad bot MATCH! replying...\u001b[0m\n")
-                        try:
-                            comment.parent().parent().parent()
-                        except:
-                            comment.reply(why)
-                        else:
-                            comment.reply("WHY?")
+                try:
+                    comment.parent().parent().parent()
+                except:
+                    comment.reply(why)
+                else:
+                    comment.reply("WHY?")
                 continue
             elif parent(comment).author.name == username and comment.body.lower() == "good bot":
                 print("\033[92mgood bot MATCH! replying...\u001b[0m\n")
-                        try:
-                            comment.parent().parent().parent()
-                        except:
-                            comment.reply(thanks)
-                        else:
-                            comment.reply("thanks :)")
+                try:
+                    comment.parent().parent().parent()
+                except:
+                    comment.reply(thanks)
+                else:
+                    comment.reply("thanks :)")
                 continue
             else:
                 for item in Muck_list:
