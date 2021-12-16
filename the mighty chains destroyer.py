@@ -1,15 +1,17 @@
 #!/usr/bin/python3
 # this bot was made by u/hananelroe on reddit
+# import needed libraries
 import thefuzz.fuzz as fuzz
 import praw
 import unicodedata
 import DA_SECRETS
 
+# print the version
 print("\u001b[31;1m" + str(praw.__version__))
 
-Muck_list = ["muck", "muck.", "muck!", "muck?", "mֳ¼ck", "mֳ¼ck.", "mֳ¼ck!", "mukc", "mֳ¼ck?", "m u c k", "m\*ck",
+Muck_list = ["muck", "muck.", "muck!", "muck?", "mֳ¼ck", "mֳ¼ck.", "mֳ¼ck!", "mukc", "mֳ¼ck?", "m\*ck",
              "kcum", "׀¼uck", "much", "mcuk"]
-Blocked_users = ["u/DaniDevChainBreaker", "Hananelroe"]
+Blocked_users = [] # to use you need to write the user name without the "u/"
 Enable_Blocking = False
 
 # initialize with appropriate values
@@ -53,9 +55,7 @@ while True:
 
     try:
         for comment in subreddit.stream.comments(skip_existing=True):
-            if comment.author.name in Blocked_users and IsBlocked:
-                continue
-            fixed_comment = noglyph("".join(dict.fromkeys(comment.body.lower())))
+            fixed_comment = noglyph("".join(dict.fromkeys(comment.body.lower()))).replace(" ","").replace("\n","")
             print("\u001b[35;1m" + comment.body + "\u001b[34;1m\t" + fixed_comment + " \u001b[0m" + str(
                 fuzz.ratio(fixed_comment, "muck")) + "%")
             if comment.author.name in Blocked_users and Enable_Blocking:
@@ -63,7 +63,8 @@ while True:
                 continue
             else:
                 print("u/\u001b[36;1m" + str(comment.author) + "\u001b[0m")
-
+                if comment.author.name == username:
+                    continue
             if parent(comment).author.name == username and comment.body.lower() == "bad bot":
                 comment.reply(why)
                 continue
