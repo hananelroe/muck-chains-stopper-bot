@@ -70,7 +70,7 @@ while True:
             if parent(comment).author.name == username and comment.body.lower() == "bad bot":
                 print("\033[92mbad bot MATCH! replying...\u001b[0m\n")
                 try:
-                    comment.parent().parent().parent()
+                    comment.parent().parent().parent().parent()
                 except:
                     comment.reply(why)
                 else:
@@ -79,7 +79,7 @@ while True:
             elif parent(comment).author.name == username and comment.body.lower() == "good bot":
                 print("\033[92mgood bot MATCH! replying...\u001b[0m\n")
                 try:
-                    comment.parent().parent().parent()
+                    comment.parent().parent().parent().parent()
                 except:
                     comment.reply(thanks)
                 else:
@@ -90,7 +90,7 @@ while True:
                     if fuzz.ratio(fixed_comment, item) > 74:
                         print("\033[92mMATCH! replying...\u001b[0m\n")
                         try:
-                            comment.parent().parent().parent()
+                            comment.parent().parent().parent().parent()
                         except:
                             comment.reply(comment_content + content)
                         else:
