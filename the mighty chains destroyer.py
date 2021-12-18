@@ -20,8 +20,8 @@ client_secret = DA_SECRETS.client_secret
 username = DA_SECRETS.username
 password = DA_SECRETS.password
 user_agent = "u/hananelroe's and u/HoseanRC's comment chains breaker bot"
-comment_content = "#**SHUT**\n___\n ^(I'm just a simple bot that wants to stop muck chains, [here is my source code](https://github.com/hananelroe/muck-chains-stopper-bot))\n\n ^(I'm a collaboration between [Hananelroe](https://www.reddit.com/u/Hananelroe) and [HoseanRC](https://www.reddit.com/u/HoseanRC))"
-content = "\n\n^(I'm a collaboration between [Hananelroe](https://www.reddit.com/u/Hananelroe) and [HoseanRC](https://www.reddit.com/u/HoseanRC)! we are breaking muck, much, mukc and etc chains)\n\n^(if you're a real boner - upvote this comment. it helps my karma.)"
+comment_content = "#**SHUT**"
+content = "\n___\n ^(I'm just a simple bot that wants to stop muck chains, [here is my source code](https://github.com/hananelroe/muck-chains-stopper-bot))\n\n ^(I'm a collaboration between [Hananelroe](https://www.reddit.com/u/Hananelroe) and [HoseanRC](https://www.reddit.com/u/HoseanRC))"
 why = "WHY?" + content
 thanks = "thanks! :)" + content
 fixed_comment = ""
@@ -92,9 +92,9 @@ while True:
                         try:
                             comment.parent().parent().parent()
                         except:
-                            comment.reply(comment_content)
+                            comment.reply(comment_content + content)
                         else:
-                            comment.reply("#SHUT")
+                            comment.reply(comment_content)
                         break
                 continue
     except KeyboardInterrupt:  # Ctrl-C - stop
