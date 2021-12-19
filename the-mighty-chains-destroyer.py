@@ -82,10 +82,12 @@ while True:
                     block_time.pop(0)                                # remove it from the list
                     temp_blocked.pop(0)                              # remove the oldest item from temp_blocked
 
-            fixed_comment = noglyph(                 # removes every glyph from the comment
-                "".join(dict.fromkeys(               # removes every repeated characters
-                comment.body.lower())))               # convert all the characters to lowercase
-                ).replace(" ","").replace("\n","")   # deletes spaces and line feeds (enter)
+            fixed_comment = noglyph("".join(dict.fromkeys(comment.body.lower()))).replace(" ","").replace("\n","")
+
+            #fixed_comment = noglyph(                # removes every glyph from the comment
+            #    "".join(dict.fromkeys(              # removes every repeated characters
+            #    comment.body.lower())))             # convert all the characters to lowercase
+            #    ).replace(" ","").replace("\n","")  # deletes spaces and line feeds (enter)
 
             print("\u001b[35;1m" + comment.body      # prints the original comment, the fixed one, 
                 + "\u001b[34;1m\t" + fixed_comment   # and the fixed comment similarity to "muck"
