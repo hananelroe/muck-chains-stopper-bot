@@ -81,6 +81,8 @@ while True:
                                                                      # passed 5 minutes
                     block_time.pop(0)                                # remove it from the list
                     temp_blocked.pop(0)                              # remove the oldest item from temp_blocked
+            finally:
+                pass
 
             fixed_comment = noglyph("".join(dict.fromkeys(comment.body.lower()))).replace(" ","").replace("\n","")
 
