@@ -127,8 +127,9 @@ while True:
                 continue
             else:
                 for item in Muck_list:                                   # checks for every m*** in Muck_list and select it as item
-                    if fuzz.ratio(fixed_comment, item) > 74:             # check is the similarity of fixed_comment and item
-                                                                         # was more than 74%
+                    if fuzz.ratio(fixed_comment, item) > 74 and fixed_comment[0] in "mk":
+                                                                         # check is the similarity of fixed_comment and item
+                                                                         # is more than 74% and starts with "m" or "k"
                         print("\033[92mMATCH! replying...\u001b[0m\n")   # prints "MATCH! replying..." in green
                         try:
                             comment.parent().parent().parent().parent()  # check if the comment had more than 4 parents
