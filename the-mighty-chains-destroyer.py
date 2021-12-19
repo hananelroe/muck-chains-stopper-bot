@@ -27,7 +27,9 @@ subreddit_name = "DaniDev"
 user_agent     = "u/hananelroe's and u/HoseanRC's comment chains breaker bot"
 
 # detials about the bot to send after every comment
-content  = "\n______\n ^(I'm just a simple bot that wants to stop muck chains, [here is my github page](https://github.com/hananelroe/muck-chains-stopper-bot), you can see my source code and submit my issues there)\n\n ^(I'm a collaboration between [Hananelroe](https://www.reddit.com/u/Hananelroe) and [HoseanRC](https://www.reddit.com/u/HoseanRC))\n\n^([visit my website](https://www.reddit.com/r/Damnthatsinteresting/comments/ovp6t1/never_gonna_give_you_up_by_rick_astley_remastered))"
+content  = "\n______\n ^(I'm just a simple bot that wants to stop muck chains, [here is my github page](https://github.com/hananelroe/muck-chains-stopper-bot)\
+, you can see my source code and submit my issues there)\n\n ^(I'm a collaboration between [Hananelroe](https://www.reddit.com/u/Hananelroe) and [HoseanRC]\
+(https://www.reddit.com/u/HoseanRC))\n\n^([visit my website](https://www.reddit.com/r/Damnthatsinteresting/comments/ovp6t1/never_gonna_give_you_up_by_rick_astley_remastered))"
 
 # comment to send for every comment it receives
 shut     = "#**SHUT**"    # shut comment for m***
@@ -80,10 +82,10 @@ while True:
                     block_time.pop(0)                                # remove it from the list
                     temp_blocked.pop(0)                              # remove the oldest item from temp_blocked
 
-            fixed_comment = noglyph(                 # removes every glyph from the comment
-                "".join(dict.fromkeys(               # removes every repeated characters
-                comment.body.lower()))               # convert all the characters to lowercase
-                ).replace(" ","").replace("\n","")   # deletes spaces and line feeds (enter)
+            fixed_comment = noglyph(\                # removes every glyph from the comment
+                "".join(dict.fromkeys(\              # removes every repeated characters
+                comment.body.lower()))\              # convert all the characters to lowercase
+                ).replace(" ","").replace("\n","")\  # deletes spaces and line feeds (enter)
 
             print("\u001b[35;1m" + comment.body      # prints the original comment, the fixed one, 
                 + "\u001b[34;1m\t" + fixed_comment   # and the fixed comment similarity to "muck"
