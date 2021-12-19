@@ -4,6 +4,7 @@
 import thefuzz.fuzz as fuzz
 import praw
 import unicodedata
+import time
 import DA_SECRETS
 
 # print the version
@@ -34,6 +35,8 @@ bad_bot  = "WHY?"         # WHY? comment for "bad bot"
 good_bot = "thanks! :)"   # thanks comment for "good bot"
 
 fixed_comment = ""        # fixing comments to get better muck results
+temp_blocked  = []        # list of temporarily blocked users
+block_time    = []        # list of the time users got blocked
 
 class Empty: # Empty class for parent function
     pass     # ignore being empty
@@ -70,7 +73,13 @@ while True:
     try:
         # reads the comments from the subreddit
         for comment in subreddit.stream.comments(skip_existing=True):
-            
+
+            try:
+                while time.gmtime() > (60 * 5) + block_time[0]:      # if the oldest available time
+                                                                     # passed 5 minutes
+                    block_time.pop(0)                                # remove it from the list
+                    temp_blocked.pop(0)                              # remove the oldest item from temp_blocked
+
             fixed_comment = noglyph(                 # removes every glyph from the comment
                 "".join(dict.fromkeys(               # removes every repeated characters
                 comment.body.lower()))               # convert all the characters to lowercase
@@ -85,6 +94,10 @@ while True:
             if comment.author.name in Blocked_users and Enable_Blocking:
                 print("u/\033[31;1m" + comment.author.name + "\033[92mBLOCKED\033[0m") # showing that its blocked
                 continue # skips comment check
+
+            elif comment.author.name in tmep_blocked:                   # check if the comment's author was blocked temporarily 
+                print("u/\033[36m" + comment.author.name + " blocked temporarily for " + str(time.gmtime() - block_time[temp_blocked.index(comment.author.name)]) + " seconds\033[0m")
+                continue                                                # skip comment check
 
             elif comment.author.name == username:                       # check if the comment was the bot's comment
                 print("u/\033[92m" + comment.author.name + "\033[0m")
@@ -123,6 +136,10 @@ while True:
                             comment.reply(shut + content)                # if yes than comment shut ("SHUT") with content
                         else:
                             comment.reply(shut)                          # else than comment shut without content
+
+                        finally:                                         # than at the end
+                            temp_blocked.append(comment.author.name)     # add the user to the temporarily blocked list
+                            block_time.append(time.gmtime())             # add the time to block_time list
                         break
                 continue
     except KeyboardInterrupt:  # Ctrl-C - stop
