@@ -79,8 +79,10 @@ while True:
             try:
                 while time.gmtime() > (60 * 5) + block_time[0]:      # if the oldest available time
                                                                      # passed 5 minutes
+                    print("line 82") # debug
                     block_time.pop(0)                                # remove it from the list
                     temp_blocked.pop(0)                              # remove the oldest item from temp_blocked
+                    print("line 85") # debug
             finally:
                 pass
 
@@ -145,8 +147,10 @@ while True:
                             comment.reply(shut)                          # else than comment shut without content
 
                         finally:                                         # than at the end
+                            print("line 150") # debug
                             temp_blocked.append(comment.author.name)     # add the user to the temporarily blocked list
                             block_time.append(time.gmtime())             # add the time to block_time list
+                            print("line 153") # debug
                         break
                 continue
     except KeyboardInterrupt:  # Ctrl-C - stop
