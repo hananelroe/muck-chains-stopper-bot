@@ -147,7 +147,7 @@ while True:
                         finally:                                         # than at the end
                             #print("line 150") # debug
                             temp_blocked.append(comment.author.name)     # add the user to the temporarily blocked list
-                            block_time.append(time.time())             # add the time to block_time list
+                            block_time.append(time.time())               # add the time to block_time list
                             #print("line 153") # debug
                         break
                 continue
