@@ -5,6 +5,7 @@ import thefuzz.fuzz as fuzz
 import praw
 import unicodedata
 import time
+import sys
 import DA_SECRETS
 
 # print the version
@@ -155,5 +156,5 @@ while True:
         print("\u001b[31;1mBye!\u001b[0m")
         break
     except Exception as error:  # Any exception
-        print(f"\u001b[31;1mError: in line {sys.exc_info()[-1].tb_lineno}: {error}")
+        print(f"\u001b[31;1mError: in line {sys.exc_info()[-1].tb_lineno}: {error}")  # prints error line and the error itself
         print("Trying to restart...\u001b[0m")
