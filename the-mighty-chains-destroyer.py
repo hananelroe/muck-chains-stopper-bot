@@ -82,7 +82,7 @@ while True:
                                                                      # passed 5 minutes
                     block_time.pop(0)                                # remove it from the list
                     temp_blocked.pop(0)                              # remove the oldest item from temp_blocked
-                    if len(bloxked_time) == 0:    # if there was'nt anymore temporarily blocked users,
+                    if len(block_time) == 0:    # if there was'nt anymore temporarily blocked users,
                         break                     # break the loop
 
             fixed_comment = noglyph("".join(dict.fromkeys(comment.body.lower()))).replace(" ","").replace("\n","")
@@ -103,7 +103,7 @@ while True:
                 continue # skips comment check
 
             elif comment.author.name in temp_blocked:                   # check if the comment's author was blocked temporarily 
-                print("u/\033[36m" + comment.author.name + "\nblocked temporarily for " + int(str(time.time() - block_time[temp_blocked.index(comment.author.name)])) + " seconds\033[0m")
+                print("u/\033[36m" + comment.author.name + "\nblocked temporarily for " + int(time.time() - block_time[temp_blocked.index(comment.author.name)]) + " seconds\033[0m")
                 continue                                                # skip comment check
 
             elif comment.author.name == username:                       # check if the comment was the bot's comment
