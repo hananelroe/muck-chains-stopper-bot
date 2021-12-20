@@ -5,6 +5,7 @@ import thefuzz.fuzz as fuzz
 import praw
 import unicodedata
 import time
+import random
 import sys
 import DA_SECRETS
 
@@ -139,7 +140,7 @@ while True:
                     if fuzz.ratio(fixed_comment, item) > 74 and fixed_comment[0] in "mk":
                                                                          # check is the similarity of fixed_comment and item
                                                                          # is more than 74% and starts with "m" or "k"
-                        if ++mucks >= (4 + math.randint(0,1)):
+                        if ++mucks >= (4 + random.randint(0,1)):
                             mucks = 0
                             print("\033[92mMATCH! replying...\u001b[0m\n")   # prints "MATCH! replying..." in green
                             try:
