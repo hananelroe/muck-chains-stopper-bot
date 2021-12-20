@@ -41,6 +41,8 @@ fixed_comment = ""        # fixing comments to get better muck results
 temp_blocked  = []        # list of temporarily blocked users
 block_time    = []        # list of the time users got blocked
 
+mucks         = 0         # number of mucks counted
+
 class Empty: # Empty class for parent function
     pass     # ignore being empty
 
@@ -137,19 +139,23 @@ while True:
                     if fuzz.ratio(fixed_comment, item) > 74 and fixed_comment[0] in "mk":
                                                                          # check is the similarity of fixed_comment and item
                                                                          # is more than 74% and starts with "m" or "k"
-                        print("\033[92mMATCH! replying...\u001b[0m\n")   # prints "MATCH! replying..." in green
-                        try:
-                            comment.parent().parent().parent().parent()  # check if the comment had more than 4 parents
-                        except:
-                            comment.reply(shut + content)                # if yes than comment shut ("SHUT") with content
-                        else:
-                            comment.reply(shut)                          # else than comment shut without content
+                        if ++mucks >= (4 + math.randint(0,1)):
+                            mucks = 0
+                            print("\033[92mMATCH! replying...\u001b[0m\n")   # prints "MATCH! replying..." in green
+                            try:
+                                comment.parent().parent().parent().parent()  # check if the comment had more than 4 parents
+                            except:
+                                comment.reply(shut + content)                # if yes than comment shut ("SHUT") with content
+                            else:
+                                comment.reply(shut)                          # else than comment shut without content
 
-                        finally:                                         # than at the end
-                            #print("line 150") # debug
-                            temp_blocked.append(comment.author.name)     # add the user to the temporarily blocked list
-                            block_time.append(time.time())               # add the time to block_time list
-                            #print("line 153") # debug
+                            finally:                                         # than at the end
+                                #print("line 150") # debug
+                                temp_blocked.append(comment.author.name)     # add the user to the temporarily blocked list
+                                block_time.append(time.time())               # add the time to block_time list
+                                #print("line 153") # debug
+                        else:
+                            print("\033[92mMATCH! But not enough, " + str(mucks) + " counted\u001b[0m\n")
                         break
                 continue
     except KeyboardInterrupt:  # Ctrl-C - stop
