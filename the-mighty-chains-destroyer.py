@@ -76,15 +76,13 @@ while True:
         # reads the comments from the subreddit
         for comment in subreddit.stream.comments(skip_existing=True):
 
-            try:
-                while time.gmtime() > (60 * 5) + block_time[0]:      # if the oldest available time
+            if len(block_time) > 0:               # if there was a temporarily blocked user
+                while time.time() > (60 * 5) + block_time[0]:        # if the oldest available time
                                                                      # passed 5 minutes
-                    print("line 82") # debug
                     block_time.pop(0)                                # remove it from the list
                     temp_blocked.pop(0)                              # remove the oldest item from temp_blocked
-                    print("line 85") # debug
-            finally:
-                pass
+                    if len(bloxked_time) == 0:    # if there was'nt anymore temporarily blocked users,
+                        break                     # break the loop
 
             fixed_comment = noglyph("".join(dict.fromkeys(comment.body.lower()))).replace(" ","").replace("\n","")
 
@@ -103,8 +101,8 @@ while True:
                 print("u/\033[31;1m" + comment.author.name + "\033[92mBLOCKED\033[0m") # showing that its blocked
                 continue # skips comment check
 
-            elif comment.author.name in tmep_blocked:                   # check if the comment's author was blocked temporarily 
-                print("u/\033[36m" + comment.author.name + " blocked temporarily for " + str(time.gmtime() - block_time[temp_blocked.index(comment.author.name)]) + " seconds\033[0m")
+            elif comment.author.name in temp_blocked:                   # check if the comment's author was blocked temporarily 
+                print("u/\033[36m" + comment.author.name + "\nblocked temporarily for " + int(str(time.time() - block_time[temp_blocked.index(comment.author.name)])) + " seconds\033[0m")
                 continue                                                # skip comment check
 
             elif comment.author.name == username:                       # check if the comment was the bot's comment
@@ -112,7 +110,7 @@ while True:
                 continue                                                # skip comment check
             else:
                 print("u/\033[36;1m" + comment.author.name + "\033[0m")
-                
+
             if parent(comment).author.name == username and comment.body.lower() == "bad bot":         # check if the comment was a reply to the bot
                                                                                                       # and if the comment was "bad bot"
                 print("\033[92mbad bot MATCH! replying...\033[0m\n")
@@ -147,15 +145,15 @@ while True:
                             comment.reply(shut)                          # else than comment shut without content
 
                         finally:                                         # than at the end
-                            print("line 150") # debug
+                            #print("line 150") # debug
                             temp_blocked.append(comment.author.name)     # add the user to the temporarily blocked list
-                            block_time.append(time.gmtime())             # add the time to block_time list
-                            print("line 153") # debug
+                            block_time.append(time.time())             # add the time to block_time list
+                            #print("line 153") # debug
                         break
                 continue
     except KeyboardInterrupt:  # Ctrl-C - stop
         print("\u001b[31;1mBye!\u001b[0m")
         break
     except Exception as error:  # Any exception
-        print(f"\u001b[31;1mError: {error}")
+        print(f"\u001b[31;1mError: in line {sys.exc_info()[-1].tb_lineno}: {error}")
         print("Trying to restart...\u001b[0m")
