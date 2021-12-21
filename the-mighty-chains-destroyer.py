@@ -107,7 +107,7 @@ while True:
                 continue # skips comment check
 
             elif comment.author.name in temp_blocked:                   # check if the comment's author was blocked temporarily 
-                print("u/\033[36m" + comment.author.name + "\nblocked temporarily for " + int(time.time() - block_time[temp_blocked.index(comment.author.name)]) + " seconds\033[0m")
+                print("u/\033[36m" + comment.author.name + "\nblocked temporarily for " + str(time.time() - block_time[temp_blocked.index(comment.author.name)] - (block_time[temp_blocked.index(comment.author.name)] % 1) + 1) + " seconds\033[0m")
                 continue                                                # skip comment check
 
             elif comment.author.name == username:                       # check if the comment was the bot's comment
