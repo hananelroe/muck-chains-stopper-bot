@@ -53,7 +53,7 @@ def parent(child_comment):      # gets comment's parrent (aka the comment it rep
     parent_comment = Empty()    # create empty object for the fake comment
     parent_comment.author = ""  # add empty name for the author of the fake comment
     try:
-        if type(child_comment.parent()) == "<class 'praw.models.reddit.comment.Comment'>":   # check if it's a comment
+        if str(type(child_comment.parent())) == "<class 'praw.models.reddit.comment.Comment'>":   # check if it's a comment
             parent_comment = child_comment.parent()    # if it did find the comment, it will
                                                        # save it, otherwise it will raise error
     finally:
