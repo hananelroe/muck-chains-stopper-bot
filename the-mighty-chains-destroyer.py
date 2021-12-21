@@ -53,8 +53,9 @@ def parent(child_comment):      # gets comment's parrent (aka the comment it rep
     parent_comment = Empty()    # create empty object for the fake comment
     parent_comment.author = ""  # add empty name for the author of the fake comment
     try:
-        parent_comment = child_comment.parent()  # if it did find the comment, it will
-                                                 # save it, otherwise it will raise error
+        parent_comment = child_comment.parent()    # if it did find the comment, it will
+                                                   # save it, otherwise it will raise error
+        parent_comment.body = parent_comment.body  # check if it's a comment
     finally:
         return parent_comment   # at the end returns the same output as comment.parent()
                                 # but it will return empty comment instead of any error
@@ -142,7 +143,7 @@ while True:
                                                                          # is more than 74% and starts with "m" or "k"
                         if comment.body != parent(comment).body:
                             break
-                        mucks += 1
+                        mucks += 1   # count a muck
                         if mucks >= (4 + random.randint(0,1)):
                             mucks = 0
                             print("\033[92mMATCH! replying...\u001b[0m\n")   # prints "MATCH! replying..." in green
@@ -159,7 +160,7 @@ while True:
                                 block_time.append(time.time())               # add the time to block_time list
                                 #print("line 153") # debug
                         else:
-                            print("\033[92mMATCH! But not enough, " + str(mucks) + " counted\u001b[0m\n")
+                            print("\033[92mMATCH! But not enough mucks, " + str(mucks) + " counted\u001b[0m\n")
                         break
                 continue
     except KeyboardInterrupt:  # Ctrl-C - stop
