@@ -25,7 +25,7 @@ client_id      = DA_SECRETS.client_id
 client_secret  = DA_SECRETS.client_secret
 username       = DA_SECRETS.username
 password       = DA_SECRETS.password
-subreddit_name = "test"
+subreddit_name = "DaniDev"
 user_agent     = "u/hananelroe's and u/HoseanRC's comment chains breaker bot"
 
 # detials about the bot to send after every comment
