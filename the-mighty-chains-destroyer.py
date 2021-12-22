@@ -50,8 +50,9 @@ class Empty: # Empty class for parent function
 def parent(child_comment):      # gets comment's parrent (aka the comment it replyed to)
                                 # and returns a fake empty comment if it didn't find one
 
-    parent_comment = Empty()    # create empty object for the fake comment
-    parent_comment.author = ""  # add empty name for the author of the fake comment
+    parent_comment = Empty()         # create empty object for the fake comment
+    parent_comment.author = Empty()  # add empty object for name for the author of the fake comment
+    parent_comment.author.name = ""  # add the fake comment's author name
     try:
         if str(type(child_comment.parent())) == "<class 'praw.models.reddit.comment.Comment'>":   # check if it's a comment
             parent_comment = child_comment.parent()    # if it did find the comment, it will
