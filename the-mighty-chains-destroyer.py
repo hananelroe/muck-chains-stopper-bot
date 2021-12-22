@@ -25,7 +25,6 @@ client_id      = DA_SECRETS.client_id
 client_secret  = DA_SECRETS.client_secret
 username       = DA_SECRETS.username
 password       = DA_SECRETS.password
-subreddit_name = "DaniDev"
 user_agent     = "u/hananelroe's and u/HoseanRC's comment chains breaker bot"
 
 # detials about the bot to send after every comment
@@ -77,7 +76,7 @@ while True:
                          user_agent=user_agent)
 
     # selects the subreddit to read the comments from
-    subreddit = reddit.subreddit(subreddit_name)
+    subreddit = reddit.subreddit(DA_SECRETS.subreddit_name)
 
     print("\033[92monline\u001b[0m")  # prints green online
 
