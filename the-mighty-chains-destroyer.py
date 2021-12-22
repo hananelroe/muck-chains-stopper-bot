@@ -25,7 +25,7 @@ client_id      = DA_SECRETS.client_id
 client_secret  = DA_SECRETS.client_secret
 username       = DA_SECRETS.username
 password       = DA_SECRETS.password
-subreddit_name = "DaniDev"
+subreddit_name = "test"
 user_agent     = "u/hananelroe's and u/HoseanRC's comment chains breaker bot"
 
 # detials about the bot to send after every comment
@@ -44,10 +44,13 @@ block_time    = []        # list of the time users got blocked
 
 mucks         = 0         # number of mucks counted
 
-class Empty: # Empty class for parent function
+class Empty():  # Empty class for parent function
+    def __init__(self):
+        self.body = None  # a fake "body" attribute
+
     pass     # ignore being empty
 
-def parent(child_comment):      # gets comment's parrent (aka the comment it replyed to)
+def parent(child_comment):      # gets comment's parent (aka the comment it replyed to)
                                 # and returns a fake empty comment if it didn't find one
 
     parent_comment = Empty()         # create empty object for the fake comment
@@ -97,7 +100,7 @@ while True:
             #    comment.body.lower())))             # convert all the characters to lowercase
             #    ).replace(" ","").replace("\n","")  # deletes spaces and line feeds (enter)
 
-            print("\u001b[35;1m" + comment.body      # prints the original comment, the fixed one, 
+            print("\u001b[35;1m" + comment.body      # prints the original comment, the fixed one,
                 + "\u001b[34;1m\t" + fixed_comment   # and the fixed comment similarity to "muck"
                 + " \u001b[0m" + str(                # in percentage
                 fuzz.ratio(fixed_comment, "muck")) + "%")
@@ -107,7 +110,7 @@ while True:
                 print("u/\033[31;1m" + comment.author.name + "\033[92mBLOCKED\033[0m") # showing that its blocked
                 continue # skips comment check
 
-            elif comment.author.name in temp_blocked:                   # check if the comment's author was blocked temporarily 
+            elif comment.author.name in temp_blocked:                   # check if the comment's author was blocked temporarily
                 print("u/\033[36m" + comment.author.name + "\nblocked temporarily for " + str(time.time() - block_time[temp_blocked.index(comment.author.name)] - (block_time[temp_blocked.index(comment.author.name)] % 1) + 1) + " seconds\033[0m")
                 continue                                                # skip comment check
 
@@ -168,5 +171,5 @@ while True:
         print("\u001b[31;1mBye!\u001b[0m")
         break
     except Exception as error:  # Any exception
-        print(f"\u001b[31;1mError: in line {sys.exc_info()[-1].tb_lineno}: {error}")  # prints error line and the error itself
+        print(f"\u001b[31;1mError in line {sys.exc_info()[-1].tb_lineno}: {error}")  # prints error line and the error itself
         print("Trying to restart...\u001b[0m")
