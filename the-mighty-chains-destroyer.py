@@ -5,12 +5,13 @@ import thefuzz.fuzz as fuzz
 import praw
 import unicodedata
 import time
+import datetime
 import random
 import sys
 import DA_SECRETS
 
 # print the version
-print("\u001b[31;1mpraw: v" + str(praw.__version__))
+print(f"\u001b[31;1mpraw: v{str(praw.__version__)}\033[0m")
 
 # every m*** to get checked with the comments
 Muck_list = ["muck", "muck.", "muck!", "muck?", "mֳ¼ck", "mֳ¼ck.", "mֳ¼ck!", "mukc", "mֳ¼ck?", "m\*ck",
@@ -27,7 +28,7 @@ username       = DA_SECRETS.username
 password       = DA_SECRETS.password
 user_agent     = "u/hananelroe's and u/HoseanRC's comment chains breaker bot"
 
-# detials about the bot to send after every comment
+# details about the bot to send after every comment
 content  = "\n______\n ^(I'm just a simple bot that wants to stop muck chains, [here is my github page](https://github.com/hananelroe/muck-chains-stopper-bot)\
 , you can see my source code and submit my issues there)\n\n ^(I'm a collaboration between [Hananelroe](https://www.reddit.com/u/Hananelroe) and [HoseanRC]\
 (https://www.reddit.com/u/HoseanRC))\n\n^([visit my website](https://www.reddit.com/r/Damnthatsinteresting/comments/ovp6t1/never_gonna_give_you_up_by_rick_astley_remastered))"
@@ -43,10 +44,16 @@ block_time    = []        # list of the time users got blocked
 
 mucks         = 0         # number of mucks counted
 
+mucks_counter = 0
+yesterday_Mucks = 0
+mucks_count_content1 = "**you have summoned me to show you the state of this sub**\n\ntoday I have counted **"  # the Asterisks are for bolding the counters' numbers
+mucks_count_content2 = "** mucks.\n\nyesterday I have counted **"
+mucks_count_disclaimer = "^(I don't reply to all mucks, but I do count both mucks that are a part of a chain and mucks that aren't, and the count resets every day.) \n\n^(if you've noticed a problem or want to contribute to my code, [here is my GitHub page](https://github.com/hananelroe/muck-chains-stopper-bot))"
+
+
 class Empty():  # Empty class for parent function
     def __init__(self):
         self.body = None  # a fake "body" attribute
-
     pass     # ignore being empty
 
 def parent(child_comment):      # gets comment's parent (aka the comment it replyed to)
@@ -81,6 +88,12 @@ while True:
     print("\033[92monline\u001b[0m")  # prints green online
 
     try:
+        # resets the muck counter to 0 every day
+        if datetime.datetime.utcnow().hour == 12:
+            if datetime.datetime.utcnow().minute == 0:
+                Yesterday_Mucks = mucks_counter
+                mucks_counter = 0
+
         # reads the comments from the subreddit
         for comment in subreddit.stream.comments(skip_existing=True):
 
@@ -89,7 +102,7 @@ while True:
                                                                      # passed 5 minutes
                     block_time.pop(0)                                # remove it from the list
                     temp_blocked.pop(0)                              # remove the oldest item from temp_blocked
-                    if len(block_time) == 0:    # if there was'nt anymore temporarily blocked users,
+                    if len(block_time) == 0:    # if there wasn't anymore temporarily blocked users,
                         break                     # break the loop
 
             fixed_comment = noglyph("".join(dict.fromkeys(comment.body.lower()))).replace(" ","").replace("\n","")
@@ -106,7 +119,7 @@ while True:
 
             # checks if Enable_Blocking is True and if the comment author is in Blocked_users list
             if comment.author.name in Blocked_users and Enable_Blocking:
-                print("u/\033[31;1m" + comment.author.name + "\033[92mBLOCKED\033[0m") # showing that its blocked
+                print("u/\033[31;1m" + comment.author.name + "\033[92mBLOCKED\033[0m")  # showing that its blocked
                 continue # skips comment check
 
             elif comment.author.name in temp_blocked:                   # check if the comment's author was blocked temporarily
@@ -144,6 +157,8 @@ while True:
                     if fuzz.ratio(fixed_comment, item) > 74 and fixed_comment[0] in "mk":
                                                                          # check is the similarity of fixed_comment and item
                                                                          # is more than 74% and starts with "m" or "k"
+                        mucks_counter += 1  # adds 1 muck to today's count
+
                         if comment.body != parent(comment).body:
                             break
                         mucks += 1   # count a muck
@@ -158,14 +173,22 @@ while True:
                                 comment.reply(shut)                          # else than comment shut without content
 
                             finally:                                         # than at the end
-                                #print("line 150") # debug
                                 temp_blocked.append(comment.author.name)     # add the user to the temporarily blocked list
                                 block_time.append(time.time())               # add the time to block_time list
-                                #print("line 153") # debug
                         else:
                             print("\033[92mMATCH! But not enough mucks, " + str(mucks) + " counted\u001b[0m\n")
                         break
+
+                if comment.body.lower() == "u/danidevchainbreaker":  # when someone mentions the bot
+                    if int(yesterday_Mucks) < int(mucks_counter):  # if today there were more mucks than yesterday:
+                        print("\033[96m someone mentioned me!\033[0m \033[93m and it gets worse...\033[0m")
+                        comment.reply(mucks_count_content1 + str(mucks_counter) + mucks_count_content2 + str(yesterday_Mucks) + "** mucks. it gets worse...\n\n" + mucks_count_disclaimer)
+
+                    else:
+                        print("\033[96m someone mentioned me!\033[0m \033[92m and it gets better!\033[0m")
+                        comment.reply(mucks_count_content1 + str(mucks_counter) + mucks_count_content2  + str(yesterday_Mucks) + "** mucks. we're getting better!\n\n" + mucks_count_disclaimer)
                 continue
+
     except KeyboardInterrupt:  # Ctrl-C - stop
         print("\u001b[31;1mBye!\u001b[0m")
         break
