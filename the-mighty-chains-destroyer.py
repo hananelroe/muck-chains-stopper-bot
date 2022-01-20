@@ -49,12 +49,14 @@ yesterday_Mucks = 0
 mucks_count_content1 = "**you have summoned me to show you the state of this sub**\n\ntoday I have counted **"  # the Asterisks are for bolding the counters' numbers
 mucks_count_content2 = "** mucks.\n\nyesterday I have counted **"
 mucks_count_disclaimer = "^(I don't reply to all mucks, but I do count both mucks that are a part of a chain and mucks that aren't, and the count resets every day.) \n\n^(if you've noticed a problem or want to contribute to my code, [here is my GitHub page](https://github.com/hananelroe/muck-chains-stopper-bot))"
+help_request = "\n\n ### **IMPORTANT: the bot was supposed to restart the mucks count every day, but my programmer didn't manage to implement it yet. if you have an idea how to program it, consider [contributing to the project](https://github.com/hananelroe/muck-chains-stopper-bot)**"
 
 
 class Empty():  # Empty class for parent function
     def __init__(self):
         self.body = None  # a fake "body" attribute
     pass     # ignore being empty
+
 
 def parent(child_comment):      # gets comment's parent (aka the comment it replyed to)
                                 # and returns a fake empty comment if it didn't find one
@@ -88,11 +90,6 @@ while True:
     print("\033[92monline\u001b[0m")  # prints green online
 
     try:
-        # resets the muck counter to 0 every day
-        if datetime.datetime.utcnow().hour == 12:
-            if datetime.datetime.utcnow().minute == 0:
-                Yesterday_Mucks = mucks_counter
-                mucks_counter = 0
 
         # reads the comments from the subreddit
         for comment in subreddit.stream.comments(skip_existing=True):
@@ -168,9 +165,9 @@ while True:
                             try:
                                 comment.parent().parent().parent().parent()  # check if the comment had more than 4 parents
                             except:
-                                comment.reply(shut + content)                # if yes than comment shut ("SHUT") with content
+                                comment.reply(shut + content + help_request)                # if yes than comment shut ("SHUT") with content
                             else:
-                                comment.reply(shut)                          # else than comment shut without content
+                                comment.reply(shut + help_request)                          # else than comment shut without content
 
                             finally:                                         # than at the end
                                 temp_blocked.append(comment.author.name)     # add the user to the temporarily blocked list
@@ -180,13 +177,15 @@ while True:
                         break
 
                 if comment.body.lower() == "u/danidevchainbreaker":  # when someone mentions the bot
-                    if int(yesterday_Mucks) < int(mucks_counter):  # if today there were more mucks than yesterday:
-                        print("\033[96m someone mentioned me!\033[0m \033[93m and it gets worse...\033[0m")
-                        comment.reply(mucks_count_content1 + str(mucks_counter) + mucks_count_content2 + str(yesterday_Mucks) + "** mucks. it gets worse...\n\n" + mucks_count_disclaimer)
-
-                    else:
-                        print("\033[96m someone mentioned me!\033[0m \033[92m and it gets better!\033[0m")
-                        comment.reply(mucks_count_content1 + str(mucks_counter) + mucks_count_content2  + str(yesterday_Mucks) + "** mucks. we're getting better!\n\n" + mucks_count_disclaimer)
+                    comment.reply(mucks_count_content1 + str(mucks_counter) + mucks_count_content2 + str(yesterday_Mucks) + "** mucks. it gets worse...\n\n" + mucks_count_disclaimer + help_request)
+#   suspended due to the count reset bugs:
+#                    if int(yesterday_Mucks) < int(mucks_counter):  # if today there were more mucks than yesterday:
+#                        print("\033[96m someone mentioned me!\033[0m \033[93m and it gets worse...\033[0m")
+#                        comment.reply(mucks_count_content1 + str(mucks_counter) + mucks_count_content2 + str(yesterday_Mucks) + "** mucks. it gets worse...\n\n" + mucks_count_disclaimer)
+#
+#                    else:
+#                        print("\033[96m someone mentioned me!\033[0m \033[92m and it gets better!\033[0m")
+#                        comment.reply(mucks_count_content1 + str(mucks_counter) + mucks_count_content2  + str(yesterday_Mucks) + "** mucks. we're getting better!\n\n" + mucks_count_disclaimer)
                 continue
 
     except KeyboardInterrupt:  # Ctrl-C - stop
