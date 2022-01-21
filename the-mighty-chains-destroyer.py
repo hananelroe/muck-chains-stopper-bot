@@ -5,10 +5,13 @@ import thefuzz.fuzz as fuzz
 import praw
 import unicodedata
 import time
-import datetime
 import random
 import sys
-import DA_SECRETS
+import os
+import json
+
+from os.path import join, dirname
+from dotenv import load_dotenv
 
 # print the version
 print(f"\u001b[31;1mpraw: v{str(praw.__version__)}\033[0m")
@@ -22,10 +25,13 @@ Blocked_users = []         # to use you need to write the user name without the 
 Enable_Blocking = False    # make it True to enable blocking users
 
 # bot information:
-client_id      = DA_SECRETS.client_id
-client_secret  = DA_SECRETS.client_secret
-username       = DA_SECRETS.username
-password       = DA_SECRETS.password
+dotenv_path = join(dirname(__file__), '.env')
+load_dotenv(dotenv_path)
+TOKEN = os.environ.get("TOKEN")
+CLIENT_ID      = os.environ.get("CLIENT_ID")
+CLIENT_SECRET  = os.environ.get("CLIENT_SECRET")
+USERNAME       = os.environ.get("USERNAME")
+PASSWORD       = os.environ.get("PASSWORD")
 user_agent     = "u/hananelroe's and u/HoseanRC's comment chains breaker bot"
 
 # details about the bot to send after every comment
@@ -78,14 +84,14 @@ def noglyph(s):  # removes any glyph from a character (ex. ý -> y, Ŕ -> R)
 
 while True:
     # creating an authorized reddit instance from the given data
-    reddit = praw.Reddit(client_id=client_id,
-                         client_secret=client_secret,
-                         username=username,
-                         password=password,
+    reddit = praw.Reddit(CLIENT_ID=CLIENT_ID,
+                         CLIENT_SECRET=CLIENT_SECRET,
+                         USERNAME=USERNAME,
+                         PASSWORD=PASSWORD,
                          user_agent=user_agent)
 
     # selects the subreddit to read the comments from
-    subreddit = reddit.subreddit(DA_SECRETS.subreddit_name)
+    subreddit = reddit.subreddit(os.environ.get("SUBREDDIT_NAME"))
 
     print("\033[92monline\u001b[0m")  # prints green online
 
@@ -123,13 +129,13 @@ while True:
                 print("u/\033[36m" + comment.author.name + "\nblocked temporarily for " + str(time.time() - block_time[temp_blocked.index(comment.author.name)] - (block_time[temp_blocked.index(comment.author.name)] % 1) + 1) + " seconds\033[0m")
                 continue                                                # skip comment check
 
-            elif comment.author.name == username:                       # check if the comment was the bot's comment
+            elif comment.author.name == USERNAME:                       # check if the comment was the bot's comment
                 print("u/\033[92m" + comment.author.name + "\033[0m")
                 continue                                                # skip comment check
             else:
                 print("u/\033[36;1m" + comment.author.name + "\033[0m")
 
-            if parent(comment).author.name == username and comment.body.lower() == "bad bot":         # check if the comment was a reply to the bot
+            if parent(comment).author.name == USERNAME and comment.body.lower() == "bad bot":         # check if the comment was a reply to the bot
                                                                                                       # and if the comment was "bad bot"
                 print("\033[92mbad bot MATCH! replying...\033[0m\n")
                 try:
@@ -139,7 +145,7 @@ while True:
                 else:
                     comment.reply(bad_bot)                         # else than comment bad_bot without content
                 continue
-            elif parent(comment).author.name == username and comment.body.lower() == "good bot":      # check if the comment was a reply to the bot
+            elif parent(comment).author.name == USERNAME and comment.body.lower() == "good bot":      # check if the comment was a reply to the bot
                                                                                                       # and if the comment was "good bot"
                 print("\033[92mgood bot MATCH! replying...\u001b[0m\n")
                 try:
@@ -154,11 +160,17 @@ while True:
                     if fuzz.ratio(fixed_comment, item) > 74 and fixed_comment[0] in "mk":
                                                                          # check is the similarity of fixed_comment and item
                                                                          # is more than 74% and starts with "m" or "k"
-                        mucks_counter += 1  # adds 1 muck to today's count
 
                         if comment.body != parent(comment).body:
                             break
-                        mucks += 1   # count a muck
+                        with open("counter.json", "r") as f:
+                            counters = json.load(f)   # count a muck
+                        counters("total_count")+1  # adds 1 muck to today's count
+                        counters("today_count")+1
+                        mucks_counter+=1
+                        mucks+=1
+                        with open("counter.json", "w") as f:
+                            counters = json.dump(counters,) # Dumps new values into the json file
                         if mucks >= (4 + random.randint(0,1)):
                             mucks = 0
                             print("\033[92mMATCH! replying...\u001b[0m\n")   # prints "MATCH! replying..." in green
