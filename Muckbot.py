@@ -16,48 +16,53 @@ Muck_list = ["muck", "muck.", "muck!", "muck?", "mֳ¼ck", "mֳ¼ck.", "mֳ¼ck!
              "kcum", "׀¼uck", "much", "mcuk"]
 
 # list of blocked users to skip checking them
-Blocked_users = []         # to use you need to write the user name without the "u/"
-Enable_Blocking = False    # make it True to enable blocking users
+Blocked_users = []  # to use you need to write the user name without the "u/"
+Enable_Blocking = False  # make it True to enable blocking users
 
 # bot information:
-client_id      = DA_SECRETS.client_id
-client_secret  = DA_SECRETS.client_secret
-username       = DA_SECRETS.username
-password       = DA_SECRETS.password
-user_agent     = "u/hananelroe's and u/HoseanRC's comment chains breaker bot"
+client_id = DA_SECRETS.client_id
+client_secret = DA_SECRETS.client_secret
+username = DA_SECRETS.username
+password = DA_SECRETS.password
+user_agent = "u/hananelroe's and u/HoseanRC's comment chains breaker bot"
 
 # detials about the bot to send after every comment
-credit  = "\n______\n ^(I'm just a simple bot that wants to stop muck chains, [here is my github page](https://github.com/hananelroe/muck-chains-stopper-bot)\
+credit = "\n______\n ^(I'm just a simple bot that wants to stop muck chains, [here is my github page](https://github.com/hananelroe/muck-chains-stopper-bot)\
 , you can see my source code and submit my issues there)\n\n ^(I'm a collaboration between [Hananelroe](https://www.reddit.com/u/Hananelroe) and [HoseanRC]\
 (https://www.reddit.com/u/HoseanRC))\n\n^([visit my website](https://www.reddit.com/r/Damnthatsinteresting/comments/ovp6t1/never_gonna_give_you_up_by_rick_astley_remastered))"
 
 # comment to send for every comment it receives
-shut     = "#**SHUT**"    # shut comment for m***
-bad_bot  = "WHY?"         # WHY? comment for "bad bot"
-good_bot = "thanks! :)"   # thanks comment for "good bot"
+shut = "#**SHUT**"  # shut comment for m***
+bad_bot = "WHY?"  # WHY? comment for "bad bot"
+good_bot = "thanks! :)"  # thanks comment for "good bot"
 
-fixed_comment = ""        # fixing comments to get better muck results
+fixed_comment = ""  # fixing comments to get better muck results
 
-mucks         = 0         # number of mucks counted
+mucks = 0  # number of mucks
+
+reduceComments = False
 
 class Empty():  # Empty class for parent function
     def __init__(self):
         self.body = None  # a fake "body" attribute
     pass     # ignore being empty
 
-def parent(child_comment):      # gets comment's parent (aka the comment it replyed to)
-                                # and returns a fake empty comment if it didn't find one
 
-    parent_comment = Empty()         # create empty object for the fake comment
+def parent(child_comment):  # gets comment's parent (aka the comment it replied to)
+    # and returns a fake empty comment if it didn't find one
+
+    parent_comment = Empty()  # create empty object for the fake comment
     parent_comment.author = Empty()  # add empty object for name for the author of the fake comment
     parent_comment.author.name = ""  # add the fake comment's author name
     try:
-        if str(type(child_comment.parent())) == "<class 'praw.models.reddit.comment.Comment'>":   # check if it's a comment
-            parent_comment = child_comment.parent()    # if it did find the comment, it will
-                                                       # save it, otherwise it will raise error
+        if str(type(
+                child_comment.parent())) == "<class 'praw.models.reddit.comment.Comment'>":  # check if it's a comment
+            parent_comment = child_comment.parent()  # if it did find the comment, it will
+            # save it, otherwise it will raise error
     finally:
-        return parent_comment   # at the end returns the same output as comment.parent()
-                                # but it will return empty comment instead of any error
+        return parent_comment  # at the end returns the same output as comment.parent()
+        # but it will return empty comment instead of any error
+
 
 def noglyph(s):  # removes any glyph from a character (ex. ý -> y, Ŕ -> R)
     return ''.join(c for c in unicodedata.normalize('NFD', s)
@@ -121,12 +126,19 @@ if __name__ == '__main__':
                     for item in Muck_list:
                         # if the comment is >74% "muck" and starts/ends with "m"/"k":
                         if fuzz.ratio(fixed_comment, item) > 74 and fixed_comment[0] in "mk":
-                            reply(comment, shut, credit)
+                            if reduceComments:
+                                if random.randrange(1, 5) == 1:  # roughly 1 out of 5 comments:
+                                    print("\033[92m MUCK detected! replying...\u001b[0m\n")
+                                    reply(comment, shut, credit)
+                            else:
+                                print("\033[92m MUCK detected! replying...\u001b[0m\n")
+                                reply(comment, shut, credit)
                             break
                     continue
         except KeyboardInterrupt:  # Ctrl-C - stop
             print("\u001b[31;1mBye!\u001b[0m")
             break
         except Exception as error:  # Any exception
-            print(f"\u001b[31;1mError in line {sys.exc_info()[-1].tb_lineno}: {error}")  # prints error line and the error itself
+            print(
+                f"\u001b[31;1mError in line {sys.exc_info()[-1].tb_lineno}: {error}")  # prints error line and the error itself
             print("Trying to restart...\u001b[0m")
