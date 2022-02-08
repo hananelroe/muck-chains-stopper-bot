@@ -1,0 +1,4 @@
+praw==7.5.0
+pytz==2021.3
+schedule==1.1.0
+thefuzz==0.19.0
