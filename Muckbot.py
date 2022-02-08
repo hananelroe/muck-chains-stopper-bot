@@ -1,11 +1,10 @@
 # this bot was made by u/hananelroe on reddit
-# import needed libraries
 import thefuzz.fuzz as fuzz
 import praw
 import unicodedata
-import time
 import random
 import sys
+from threading import Thread
 import DA_SECRETS
 
 # print the version
@@ -26,7 +25,7 @@ username = DA_SECRETS.username
 password = DA_SECRETS.password
 user_agent = "u/hananelroe's and u/HoseanRC's comment chains breaker bot"
 
-# detials about the bot to send after every comment
+# details about the bot to send after every comment
 credit = "\n______\n ^(I'm just a simple bot that wants to stop muck chains, [here is my github page](https://github.com/hananelroe/muck-chains-stopper-bot)\
 , you can see my source code and submit my issues there)\n\n ^(I'm a collaboration between [Hananelroe](https://www.reddit.com/u/Hananelroe) and [HoseanRC]\
 (https://www.reddit.com/u/HoseanRC))\n\n^([visit my website](https://www.reddit.com/r/Damnthatsinteresting/comments/ovp6t1/never_gonna_give_you_up_by_rick_astley_remastered))"
@@ -38,7 +37,8 @@ good_bot = "thanks! :)"  # thanks comment for "good bot"
 
 fixed_comment = ""  # fixing comments to get better muck results
 
-mucks = 0  # number of mucks
+mucks_Counter = 0
+yesterday_Mucks = 0
 
 reduceComments = False
 
@@ -70,10 +70,11 @@ def noglyph(s):  # removes any glyph from a character (ex. ý -> y, Ŕ -> R)
 
 
 def printComment(comment, fixed_comment, authorName):
-    print("\u001b[35;1m" + comment  # prints the original comment, the fixed one,
-          + "\u001b[34;1m\t" + fixed_comment  # and the fixed comment similarity to "muck"
-          + " \u001b[0m" + str(fuzz.ratio(fixed_comment, "muck")) + "%"
-          + f"\nu/\033[36;1m{authorName}\033[0m")
+    if authorName != username:
+        print("\u001b[35;1m" + comment  # prints the original comment, the fixed one,
+              + "\u001b[34;1m\t" + fixed_comment  # and the fixed comment similarity to "muck"
+              + " \u001b[0m" + str(fuzz.ratio(fixed_comment, "muck")) + "%"
+              + f"\nu/\033[36;1m{authorName}\033[0m\n")
 
 
 def reply(comment, content, credit):  # replies with/without credit according to the chain's length
@@ -85,6 +86,57 @@ def reply(comment, content, credit):  # replies with/without credit according to
         comment.reply(content + credit)
     else:
         comment.reply(content)  # else than comment bad_bot without credit
+
+
+def main():
+    global Muck_list, Blocked_users, Enable_Blocking, client_id, client_secret, username, password, user_agent, credit, shut, bad_bot, good_bot, fixed_comment, mucks, reduceComments
+
+    # for every new comment:
+    for comment in subreddit.stream.comments(skip_existing=True):
+
+        # removing glyghps, spaces and new lines:
+        fixed_comment = noglyph("".join(dict.fromkeys(comment.body.lower()))).replace(" ", "").replace("\n", "")
+
+        # print comment details:
+        printComment(comment.body, fixed_comment, comment.author.name)
+
+        # skip the comment check if the commenter is the bot or the user is blocked:
+        if comment.author.name == username or comment.author.name in Blocked_users:
+            continue
+
+        if comment.body.lower() == "u/danidevchainbreaker":
+            if int(yesterday_Mucks) < int(mucks_Counter):  # if today there were more mucks than yesterday:
+                print("\033[96m someone mentioned me!\033[0m \033[93m and it gets worse...\033[0m")
+                comment.reply(mucks_count_content1 + str(mucks_counter) + mucks_count_content2 + str(
+                    yesterday_Mucks) + "** mucks. it gets worse...\n\n" + mucks_count_disclaimer)
+
+            else:
+                print("\033[96m someone mentioned me!\033[0m \033[92m and it gets better!\033[0m")
+                comment.reply(mucks_count_content1 + str(mucks_counter) + mucks_count_content2 + str(
+                    yesterday_Mucks) + "** mucks. we're getting better!\n\n" + mucks_count_disclaimer)
+
+        # if the comment replied to the bot:
+        if parent(comment).author.name == username:
+            if comment.body.lower() == "bad bot:":
+                print("\033[92m bad bot MATCH! replying...\033[0m\n")
+                reply(comment, bad_bot, credit)
+            elif comment.body.lower() == "good bot":
+                print("\033[92m good bot MATCH! replying...\033[0m\n")
+                reply(comment, good_bot, credit)
+        else:
+            for item in Muck_list:
+                # if the comment is >74% "muck" and starts/ends with "m"/"k":
+                if fuzz.ratio(fixed_comment, item) > 74 and fixed_comment[0] in "mk":
+                    if reduceComments:
+                        if random.randrange(1, 5) == 1:  # roughly 1 out of 5 comments:
+                            print("\033[92m MUCK detected! replying...\u001b[0m\n")
+                            reply(comment, shut, credit)
+                        break
+                    else:
+                        print("\033[92m MUCK detected! replying...\u001b[0m\n")
+                        reply(comment, shut, credit)
+                    break
+            continue
 
 
 if __name__ == '__main__':
@@ -101,44 +153,12 @@ if __name__ == '__main__':
         print("\033[92m online\u001b[0m")  # prints green "online"
 
         try:
-            # for every new comment:
-            for comment in subreddit.stream.comments(skip_existing=True):
+            mainThread = Thread(target=main(), args=())
 
-                # removing glyghps, spaces and new lines:
-                fixed_comment = noglyph("".join(dict.fromkeys(comment.body.lower()))).replace(" ", "").replace("\n", "")
-
-                # print comment details:
-                printComment(comment.body, fixed_comment, comment.author.name)
-
-                # skip the comment check if the commenter is the bot or the user is blocked:
-                if comment.author.name == username or comment.author.name in Blocked_users:
-                    continue
-
-                # if the comment replied to the bot:
-                if parent(comment).author.name == username:
-                    if comment.body.lower() == "bad bot:":
-                        print("\033[92m bad bot MATCH! replying...\033[0m\n")
-                        reply(comment, bad_bot, credit)
-                    elif comment.body.lower() == "good bot":
-                        print("\033[92m good bot MATCH! replying...\033[0m\n")
-                        reply(comment, good_bot, credit)
-                else:
-                    for item in Muck_list:
-                        # if the comment is >74% "muck" and starts/ends with "m"/"k":
-                        if fuzz.ratio(fixed_comment, item) > 74 and fixed_comment[0] in "mk":
-                            if reduceComments:
-                                if random.randrange(1, 5) == 1:  # roughly 1 out of 5 comments:
-                                    print("\033[92m MUCK detected! replying...\u001b[0m\n")
-                                    reply(comment, shut, credit)
-                            else:
-                                print("\033[92m MUCK detected! replying...\u001b[0m\n")
-                                reply(comment, shut, credit)
-                            break
-                    continue
         except KeyboardInterrupt:  # Ctrl-C - stop
-            print("\u001b[31;1mBye!\u001b[0m")
+            print("\u001b[31;1m Bye!\u001b[0m")
             break
         except Exception as error:  # Any exception
             print(
-                f"\u001b[31;1mError in line {sys.exc_info()[-1].tb_lineno}: {error}")  # prints error line and the error itself
+                f"\u001b[31;1m Error in line {sys.exc_info()[-1].tb_lineno}: {error}")  # prints error line and the error itself
             print("Trying to restart...\u001b[0m")
