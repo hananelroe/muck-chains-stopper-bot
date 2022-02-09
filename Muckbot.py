@@ -46,7 +46,7 @@ mucks_count_content1 = "**you have summoned me to show you the state of this sub
 mucks_count_content2 = "** mucks.\n\nyesterday I have counted **"
 mucks_count_disclaimer = "^(I don't reply to all mucks, but I do count both mucks that are a part of a chain and mucks that aren't, and the count resets every day.) \n\n^(if you've noticed a problem or want to contribute to my code, [here is my GitHub page](https://github.com/hananelroe/muck-chains-stopper-bot))"
 
-reduceComments = False
+reduceComments = True
 
 class Empty():  # Empty class for parent function
     def __init__(self):
