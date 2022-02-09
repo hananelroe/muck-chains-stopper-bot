@@ -122,10 +122,10 @@ async def main():
     for comment in subreddit.stream.comments(skip_existing=True):
 
         # removing glyghps, spaces and new lines:
-        fixed_comment = noglyph("".join(dict.fromkeys(comment.body.lower()))).replace(" ", "").replace("\n", "")
+        fixed_comment = await noglyph("".join(dict.fromkeys(comment.body.lower()))).replace(" ", "").replace("\n", "")
 
         # print comment details:
-        printComment(comment.body, fixed_comment, comment.author.name)
+        await printComment(comment.body, fixed_comment, comment.author.name)
 
         # skip the comment check if the commenter is the bot or the user is blocked:
         if comment.author.name == username or comment.author.name in Blocked_users:
@@ -143,7 +143,7 @@ async def main():
                     yesterday_Mucks) + "** mucks. we're getting better!\n\n" + mucks_count_disclaimer)
 
         # if the comment replied to the bot:
-        if parent(comment).author.name == username:
+        if await parent(comment).author.name == username:
             if comment.body.lower() == "bad bot:":
                 print("\033[92m bad bot MATCH! replying...\033[0m\n")
                 reply(comment, bad_bot, credit)
