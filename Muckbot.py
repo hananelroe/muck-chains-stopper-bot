@@ -10,8 +10,6 @@ import pytz
 import schedule
 import DA_SECRETS
 
-import asyncio #Added for asynchronous functions
-
 # print the version
 print("\u001b[31;1m praw: v" + str(praw.__version__))
 
@@ -50,14 +48,22 @@ mucks_count_disclaimer = "^(I don't reply to all mucks, but I do count both muck
 
 reduceComments = True
 
-class Empty():  # Empty class for parent function
-    pass #Making the lines a little cleaner (Still a usable empty class)
+class author():
+    pass
 
-async def parent(child_comment):  # gets comment's parent (aka the comment it replied to)
+class EmptyComment():  # Empty comment class for parent function
+    def __init__(self):
+        self.body = None  # a fake "body" attribute
+        self.author = author()
+        self.author.name = None
+    pass
+
+
+def parent(child_comment):  # gets comment's parent (aka the comment it replied to)
     # and returns a fake empty comment if it didn't find one
 
-    parent_comment = Empty()  # create empty object for the fake comment
-    parent_comment.author = Empty()  # add empty object for name for the author of the fake comment
+    parent_comment = EmptyComment()  # create empty object for the fake comment
+    parent_comment.author = EmptyComment()  # add empty object for name for the author of the fake comment
     parent_comment.author.name = ""  # add the fake comment's author name
     try:
         if str(type(
@@ -69,12 +75,12 @@ async def parent(child_comment):  # gets comment's parent (aka the comment it re
         # but it will return empty comment instead of any error
 
 
-async def noglyph(s):  # removes any glyph from a character (ex. ý -> y, Ŕ -> R)
+def noglyph(s):  # removes any glyph from a character (ex. ý -> y, Ŕ -> R)
     return ''.join(c for c in unicodedata.normalize('NFD', s)
                    if unicodedata.category(c) != 'Mn')
 
 
-async def printComment(comment, fixed_comment, authorName):
+def printComment(comment, fixed_comment, authorName):
     if authorName != username:
         print("\u001b[35;1m" + comment  # prints the original comment, the fixed one,
               + "\u001b[34;1m\t" + fixed_comment  # and the fixed comment similarity to "muck"
@@ -82,15 +88,15 @@ async def printComment(comment, fixed_comment, authorName):
               + f"\nu/\033[36;1m{authorName}\033[0m\n")
 
 
-async def reply(comment, content, credit):  # replies with/without credit according to the chain's length
+def reply(comment, content, credit):  # replies with/without credit according to the chain's length
     try:
         # check if the comment have more than 4 parents:
         comment.parent().parent().parent().parent()
     except:
         # if the comment does have more than 4 parents:
-        await comment.reply(content + credit)
+        comment.reply(content + credit)
     else:
-        await comment.reply(content)  # else than comment bad_bot without credit
+        comment.reply(content)  # else than comment bad_bot without credit
 
 def resetMuckCount():
     global yesterday_Mucks, mucks_Counter
@@ -98,7 +104,7 @@ def resetMuckCount():
     mucks_Counter = 0
     print("resetting muck count...")
 
-async def getUTCMidnight():
+def getUTCMidnight():
     final = ""
     local_tz = datetime.datetime.now(datetime.timezone.utc).astimezone().tzinfo
     a = pytz.utc.localize(datetime.datetime(1, 1, 1, 0, 0)).astimezone(local_tz)
@@ -114,18 +120,17 @@ async def getUTCMidnight():
     return final
 
 
-async def main():
-    await dailyRoutine()
+def main():
     global Muck_list, Blocked_users, Enable_Blocking, client_id, client_secret, username, password, user_agent, credit, shut, bad_bot, good_bot, fixed_comment, mucks, mucks_Counter, yesterday_Mucks, mucks_count_content1, mucks_count_content2, mucks_count_disclaimer, reduceComments
 
     # for every new comment:
     for comment in subreddit.stream.comments(skip_existing=True):
 
         # removing glyghps, spaces and new lines:
-        fixed_comment = await noglyph("".join(dict.fromkeys(comment.body.lower()))).replace(" ", "").replace("\n", "")
+        fixed_comment = noglyph("".join(dict.fromkeys(comment.body.lower()))).replace(" ", "").replace("\n", "")
 
         # print comment details:
-        await printComment(comment.body, fixed_comment, comment.author.name)
+        printComment(comment.body, fixed_comment, comment.author.name)
 
         # skip the comment check if the commenter is the bot or the user is blocked:
         if comment.author.name == username or comment.author.name in Blocked_users:
@@ -135,15 +140,15 @@ async def main():
         if comment.body.lower() == "u/danidevchainbreaker":
             if int(yesterday_Mucks) < int(mucks_Counter):  # if today there were more mucks than yesterday:
                 print("\033[96m someone mentioned me!\033[0m \u001b[31;1m and it gets worse...\033[0m")
-                await comment.reply(mucks_count_content1 + str(mucks_Counter) + mucks_count_content2 + str(
+                comment.reply(mucks_count_content1 + str(mucks_Counter) + mucks_count_content2 + str(
                     yesterday_Mucks) + "** mucks. it gets worse...\n\n" + mucks_count_disclaimer)
             else:
                 print("\033[96m someone mentioned me!\033[0m \033[92;1m and it gets better!\033[0m")
-                await comment.reply(mucks_count_content1 + str(mucks_Counter) + mucks_count_content2 + str(
+                comment.reply(mucks_count_content1 + str(mucks_Counter) + mucks_count_content2 + str(
                     yesterday_Mucks) + "** mucks. we're getting better!\n\n" + mucks_count_disclaimer)
 
         # if the comment replied to the bot:
-        if await parent(comment).author.name == username:
+        if parent(comment).author.name == username:
             if comment.body.lower() == "bad bot:":
                 print("\033[92m bad bot MATCH! replying...\033[0m\n")
                 reply(comment, bad_bot, credit)
@@ -167,15 +172,13 @@ async def main():
                     break
             continue
 
-async def dailyRoutine():
-    schedule.every().day.at(await getUTCMidnight()).do(resetMuckCount, )
+def dailyRoutine():
+    schedule.every().day.at(getUTCMidnight()).do(resetMuckCount, )
     while True:
         schedule.run_pending()
-        await asyncio.sleep(1) # Added: To make it use less constant processing power
 
 
 if __name__ == '__main__':
-
     # creating an authorized reddit instance from the given data
     reddit = praw.Reddit(client_id=client_id,
                          client_secret=client_secret,
@@ -188,7 +191,11 @@ if __name__ == '__main__':
     print("\033[92m online\u001b[0m")  # prints green "online"
 
     try:
-        asyncio.run(main())
+        mainThread = Thread(target=main)
+        routineThread = Thread(target=dailyRoutine)
+
+        mainThread.start()
+        routineThread.start()
 
     except KeyboardInterrupt:  # Ctrl-C - stop
         print("\u001b[31;1m Bye!\u001b[0m")
