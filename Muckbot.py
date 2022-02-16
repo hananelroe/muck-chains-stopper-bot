@@ -8,7 +8,10 @@ from threading import Thread
 import datetime
 import pytz
 import schedule
+import json
 import DA_SECRETS
+import console
+from console import *
 
 # print the version
 print("\u001b[31;1m praw: v" + str(praw.__version__))
@@ -17,16 +20,15 @@ print("\u001b[31;1m praw: v" + str(praw.__version__))
 Muck_list = ["muck", "muck.", "muck!", "muck?", "mֳ¼ck", "mֳ¼ck.", "mֳ¼ck!", "mukc", "mֳ¼ck?", "m\*ck",
              "kcum", "׀¼uck", "much", "mcuk"]
 
-# list of blocked users to skip checking them
-Blocked_users = []  # to use you need to write the user name without the "u/"
-Enable_Blocking = False  # make it True to enable blocking users
-
 # bot information:
 client_id = DA_SECRETS.client_id
 client_secret = DA_SECRETS.client_secret
 username = DA_SECRETS.username
 password = DA_SECRETS.password
 user_agent = "u/hananelroe's and u/HoseanRC's comment chains breaker bot"
+
+Blocked_users = ["hananelroe"]  # to use you need to write the user name without the "u/" and in lowercase
+Enable_Blocking = True  # make it True to enable blocking users
 
 # details about the bot to send after every comment
 credit = "\n______\n ^(I'm just a simple bot that wants to stop muck chains, [here is my github page](https://github.com/hananelroe/muck-chains-stopper-bot)\
@@ -46,7 +48,9 @@ mucks_count_content1 = "**you have summoned me to show you the state of this sub
 mucks_count_content2 = "** mucks.\n\nyesterday I have counted **"
 mucks_count_disclaimer = "^(I don't reply to all mucks, but I do count both mucks that are a part of a chain and mucks that aren't, and the count resets every day.) \n\n^(if you've noticed a problem or want to contribute to my code, [here is my GitHub page](https://github.com/hananelroe/muck-chains-stopper-bot))"
 
-reduceComments = True
+reduceComments = False
+preferencesFile = open('preferences.json')
+preferences = json.load(preferencesFile)
 
 class author():
     pass
@@ -121,7 +125,7 @@ def getUTCMidnight():
 
 
 def main():
-    global Muck_list, Blocked_users, Enable_Blocking, client_id, client_secret, username, password, user_agent, credit, shut, bad_bot, good_bot, fixed_comment, mucks, mucks_Counter, yesterday_Mucks, mucks_count_content1, mucks_count_content2, mucks_count_disclaimer, reduceComments
+    global Muck_list, client_id, client_secret, username, password, user_agent, credit, shut, bad_bot, good_bot, fixed_comment, mucks, mucks_Counter, yesterday_Mucks, mucks_count_content1, mucks_count_content2, mucks_count_disclaimer, reduceComments
 
     # for every new comment:
     for comment in subreddit.stream.comments(skip_existing=True):
@@ -133,7 +137,10 @@ def main():
         printComment(comment.body, fixed_comment, comment.author.name)
 
         # skip the comment check if the commenter is the bot or the user is blocked:
-        if comment.author.name == username or comment.author.name in Blocked_users:
+        if comment.author.name == username:
+            continue
+        if Enable_Blocking == True and comment.author.name.lower() in Blocked_users:
+            print("\u001b[31;1m USER BLOCKED\u001b[0m")
             continue
 
         # when someone mentions the bot:
