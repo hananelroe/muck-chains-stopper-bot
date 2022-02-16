@@ -1,4 +1,6 @@
 # this bot was made by u/hananelroe on reddit
+import warnings
+warnings.filterwarnings('ignore', '.*slow pure-python SequenceMatcher.*')
 import thefuzz.fuzz as fuzz
 import praw
 import unicodedata
@@ -9,16 +11,9 @@ import datetime
 import pytz
 import schedule
 import json
+from colors import color
 import DA_SECRETS
 import console
-from console import *
-
-# print the version
-print("\u001b[31;1m praw: v" + str(praw.__version__))
-
-# every m*** to get checked with the comments
-Muck_list = ["muck", "muck.", "muck!", "muck?", "mֳ¼ck", "mֳ¼ck.", "mֳ¼ck!", "mukc", "mֳ¼ck?", "m\*ck",
-             "kcum", "׀¼uck", "much", "mcuk"]
 
 # bot information:
 client_id = DA_SECRETS.client_id
@@ -27,15 +22,11 @@ username = DA_SECRETS.username
 password = DA_SECRETS.password
 user_agent = "u/hananelroe's and u/HoseanRC's comment chains breaker bot"
 
-Blocked_users = ["hananelroe"]  # to use you need to write the user name without the "u/" and in lowercase
-Enable_Blocking = True  # make it True to enable blocking users
-
 # details about the bot to send after every comment
 credit = "\n______\n ^(I'm just a simple bot that wants to stop muck chains, [here is my github page](https://github.com/hananelroe/muck-chains-stopper-bot)\
 , you can see my source code and submit my issues there)\n\n ^(I'm a collaboration between [Hananelroe](https://www.reddit.com/u/Hananelroe) and [HoseanRC]\
 (https://www.reddit.com/u/HoseanRC))\n\n^([visit my website](https://www.reddit.com/r/Damnthatsinteresting/comments/ovp6t1/never_gonna_give_you_up_by_rick_astley_remastered))"
 
-# comment to send for every comment it receives
 shut = "#**SHUT**"  # shut comment for m***
 bad_bot = "WHY?"  # WHY? comment for "bad bot"
 good_bot = "thanks! :)"  # thanks comment for "good bot"
@@ -48,18 +39,21 @@ mucks_count_content1 = "**you have summoned me to show you the state of this sub
 mucks_count_content2 = "** mucks.\n\nyesterday I have counted **"
 mucks_count_disclaimer = "^(I don't reply to all mucks, but I do count both mucks that are a part of a chain and mucks that aren't, and the count resets every day.) \n\n^(if you've noticed a problem or want to contribute to my code, [here is my GitHub page](https://github.com/hananelroe/muck-chains-stopper-bot))"
 
-reduceComments = False
-preferencesFile = open('preferences.json')
-preferences = json.load(preferencesFile)
+consoleMode = False
+
+preferencesFile = open("preferences.json", "r+")
+
 
 class author():
     pass
+
 
 class EmptyComment():  # Empty comment class for parent function
     def __init__(self):
         self.body = None  # a fake "body" attribute
         self.author = author()
         self.author.name = None
+
     pass
 
 
@@ -86,10 +80,10 @@ def noglyph(s):  # removes any glyph from a character (ex. ý -> y, Ŕ -> R)
 
 def printComment(comment, fixed_comment, authorName):
     if authorName != username:
-        print("\u001b[35;1m" + comment  # prints the original comment, the fixed one,
-              + "\u001b[34;1m\t" + fixed_comment  # and the fixed comment similarity to "muck"
-              + " \u001b[0m" + str(fuzz.ratio(fixed_comment, "muck")) + "%"
-              + f"\nu/\033[36;1m{authorName}\033[0m\n")
+        print(color.PURPLE + comment + " "  # prints the original comment, the fixed one,
+              + color.BLUE + fixed_comment  # and the fixed comment similarity to "muck"
+              + f" {color.END}" + str(fuzz.ratio(fixed_comment, "muck")) + "%"
+              + f"\nu/{color.CYAN}{authorName}{color.END}\n")
 
 
 def reply(comment, content, credit):  # replies with/without credit according to the chain's length
@@ -102,11 +96,13 @@ def reply(comment, content, credit):  # replies with/without credit according to
     else:
         comment.reply(content)  # else than comment bad_bot without credit
 
+
 def resetMuckCount():
     global yesterday_Mucks, mucks_Counter
     yesterday_Mucks = mucks_Counter
     mucks_Counter = 0
     print("resetting muck count...")
+
 
 def getUTCMidnight():
     final = ""
@@ -124,11 +120,20 @@ def getUTCMidnight():
     return final
 
 
+def savePreferences(file, data):
+    file.seek(0)  # <--- should reset file position to the beginning.
+    json.dump(data, file, indent=4)
+    file.truncate()  # remove remaining part
+
+
 def main():
-    global Muck_list, client_id, client_secret, username, password, user_agent, credit, shut, bad_bot, good_bot, fixed_comment, mucks, mucks_Counter, yesterday_Mucks, mucks_count_content1, mucks_count_content2, mucks_count_disclaimer, reduceComments
+    global fixed_comment, mucks, mucks_Counter, yesterday_Mucks, consoleMode
+    preferences = json.load(preferencesFile)
 
     # for every new comment:
     for comment in subreddit.stream.comments(skip_existing=True):
+        if consoleMode:
+            break  # we shouldn't run the bot when using the console
 
         # removing glyghps, spaces and new lines:
         fixed_comment = noglyph("".join(dict.fromkeys(comment.body.lower()))).replace(" ", "").replace("\n", "")
@@ -139,45 +144,69 @@ def main():
         # skip the comment check if the commenter is the bot or the user is blocked:
         if comment.author.name == username:
             continue
-        if Enable_Blocking == True and comment.author.name.lower() in Blocked_users:
-            print("\u001b[31;1m USER BLOCKED\u001b[0m")
+        if comment.author.name.lower() in preferences["blocked users"]:
+            print(f"{color.RED}USER BLOCKED{color.END}")
             continue
 
         # when someone mentions the bot:
         if comment.body.lower() == "u/danidevchainbreaker":
             if int(yesterday_Mucks) < int(mucks_Counter):  # if today there were more mucks than yesterday:
-                print("\033[96m someone mentioned me!\033[0m \u001b[31;1m and it gets worse...\033[0m")
+                print(f"{color.CYAN}someone mentioned me! {color.RED}and it gets worse...{color.END}")
                 comment.reply(mucks_count_content1 + str(mucks_Counter) + mucks_count_content2 + str(
                     yesterday_Mucks) + "** mucks. it gets worse...\n\n" + mucks_count_disclaimer)
             else:
-                print("\033[96m someone mentioned me!\033[0m \033[92;1m and it gets better!\033[0m")
+                print(f"{color.CYAN} someone mentioned me! {color.GREEN}and it gets better!{color.END}")
                 comment.reply(mucks_count_content1 + str(mucks_Counter) + mucks_count_content2 + str(
                     yesterday_Mucks) + "** mucks. we're getting better!\n\n" + mucks_count_disclaimer)
 
         # if the comment replied to the bot:
         if parent(comment).author.name == username:
             if comment.body.lower() == "bad bot:":
-                print("\033[92m bad bot MATCH! replying...\033[0m\n")
+                print(f"{color.GREEN} bad bot MATCH! replying...{color.END}\n")
                 reply(comment, bad_bot, credit)
             elif comment.body.lower() == "good bot":
-                print("\033[92m good bot MATCH! replying...\033[0m\n")
+                print(f"{color.GREEN}good bot MATCH! replying...{color.END}")
                 reply(comment, good_bot, credit)
         else:
-            for item in Muck_list:
+            for item in preferences["muck list"]:
                 # if the comment is >74% "muck" and starts/ends with "m"/"k":
                 if fuzz.ratio(fixed_comment, item) > 74 and fixed_comment[0] in "mk":
-                    if reduceComments:
+                    if preferences["reduce comments"]:
                         if random.randrange(1, 5) == 1:  # roughly 1 out of 5 comments:
-                            print("\033[92m MUCK detected! replying...\u001b[0m\n")
+                            print(f"{color.GREEN}MUCK detected! replying...{color.END}\n")
                             reply(comment, shut, credit)
                             mucks_Counter += 1
+                        else:
+                            print(f"{color.RED}MUCK detected! not replying{color.END}\n")
                         break
                     else:
-                        print("\033[92m MUCK detected! replying...\u001b[0m\n")
+                        print(f"{color.GREEN}MUCK detected! replying...{color.END}\n")
                         reply(comment, shut, credit)
                         mucks_Counter += 1
                     break
             continue
+
+
+def consoleFunc():
+    global consoleMode, preferencesFile
+    while True:
+        if input() == "console" and consoleMode == False:
+            print("\n" * 100)  # to clear all other outputs
+            print(f"{color.PURPLE}console mode{color.END}")
+            preferencesFile.close()
+            consoleMode = True
+        if consoleMode:
+            while True:
+                a = input()
+                if a == "quit":
+                    preferencesFile = open("preferences.json", "r+")
+                    print(f"{color.PURPLE}quitting console{color.END}")
+                    consoleMode = False
+                    break
+                else:
+                    console.main(a)
+
+
 
 def dailyRoutine():
     schedule.every().day.at(getUTCMidnight()).do(resetMuckCount, )
@@ -195,19 +224,25 @@ if __name__ == '__main__':
 
     # selects the subreddit to read the comments from
     subreddit = reddit.subreddit(DA_SECRETS.subreddit_name)
-    print("\033[92m online\u001b[0m")  # prints green "online"
+    print(f"{color.GREEN}online{color.END}")  # prints green "online"
 
     try:
         mainThread = Thread(target=main)
         routineThread = Thread(target=dailyRoutine)
+        consoleTread = Thread(target=consoleFunc)
 
         mainThread.start()
         routineThread.start()
+        consoleTread.start()
 
     except KeyboardInterrupt:  # Ctrl-C - stop
-        print("\u001b[31;1m Bye!\u001b[0m")
+        savePreferences(preferencesFile, preferences)
+        preferencesFile.close()
+        print(f"{color.RED}Bye!{color.END}")
 
     except Exception as error:  # Any exception
+        savePreferences(preferencesFile, preferences)
+        preferencesFile.close()
         print(
-            f"\u001b[31;1m Error in line {sys.exc_info()[-1].tb_lineno}: {error}")  # prints error line and the error itself
-        print("Trying to restart...\u001b[0m")
+            f"{color.RED}Error in line {sys.exc_info()[-1].tb_lineno}: {error}")  # prints error line and the error itself
+        print(f"Trying to restart...{color.END}")
