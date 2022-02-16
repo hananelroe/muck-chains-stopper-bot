@@ -1,4 +1,17 @@
 {
-  "blocked users" : ["hananelroe", "example"],
-  "enable blocking" : true
+    "muck list": [
+        "muck",
+        "muck.",
+        "muck!",
+        "muck?",
+        "mukc",
+        "m*ck",
+        "kcum",
+        "much",
+        "mcuk"
+    ],
+    "blocked users": [
+        "username"
+    ],
+    "reduce comments": true
 }
