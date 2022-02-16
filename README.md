@@ -12,5 +12,5 @@ linux and macos:
 open the terminal, cd to the code directory than do<br><code>python3 ./the-mighty-chains-destroyer.py</code><br>or<br><code>./the-mighty-chains-destroyer.py</code>
 
 # new update: console controls!
-to use, type "console" and press '''ENTER'''. you've now entered console mode. try typing '''help''' for the commands list!
+to use, type "console" and press <br><code>ENTER</code>. you've now entered console mode. try typing <br><code>help</code> for the commands list!
 (if you want to contibute a new command to the console, please keep the current code format)
