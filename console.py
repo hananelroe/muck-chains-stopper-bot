@@ -27,9 +27,9 @@ commandsMap = {
                   "quits console"],  # command description
         "print mucks": [f"mucks counted today: {muckbot.mucks_Counter}\nmucks counted yesterday: {muckbot.yesterday_Mucks}",
                         "prints the muck counted today and yesterday"],
-        "block": [f"{color.RED}enter user name to block{color.END}",
+        "block": [f"{color.RED}enter user name(without u/) to block{color.END}",
                        "blocks a given user"],
-        "unblock": [f"{color.GREEN}enter user name to unblock{color.END}",
+        "unblock": [f"{color.GREEN}enter user name(without u/) to unblock{color.END}",
                          "unblocks a given user"]
            }
 
