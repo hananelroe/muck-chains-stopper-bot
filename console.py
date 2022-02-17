@@ -55,3 +55,7 @@ def main(command):
         if command in commandsMap:
             print(commandsMap[command][0])
             commandsMap[command][2]()
+        else:
+            print(
+                f"{color.RED}\"{command}\" wasn't recognised as a command. check for spelling errors "
+                f"or type \"help\" for commands list.{color.END}")
