@@ -38,11 +38,11 @@ commandsMap = {
         "print mucks": [f"mucks counted today: {muckbot.mucks_Counter}\nmucks counted yesterday: {muckbot.yesterday_Mucks}",
                         "prints the muck counted today and yesterday",
                         not_a_func],
-        "block": [f"{color.RED}enter user name to block{color.END}",
+        "block": [f"{color.RED}enter user name to block{color.END}\n(without u/)",
                   "blocks a given user",
                   blockUser
                   ],
-        "unblock": [f"{color.GREEN}enter user name to unblock{color.END}",
+        "unblock": [f"{color.GREEN}enter user name to unblock{color.END}\n(without u/)",
                     "unblocks a given user",
                     unblockUser]
            }
