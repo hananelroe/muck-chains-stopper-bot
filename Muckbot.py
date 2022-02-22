@@ -149,7 +149,7 @@ def main():
             continue
 
         # when someone mentions the bot:
-        if comment.body.lower() == "u/danidevchainbreaker":
+        if comment.body.lower() == f"u/{DA_SECRETS.username.lower()}":
             if int(yesterday_Mucks) < int(mucks_Counter):  # if today there were more mucks than yesterday:
                 print(f"{color.CYAN}someone mentioned me! {color.RED}and it gets worse...{color.END}")
                 comment.reply(mucks_count_content1 + str(mucks_Counter) + mucks_count_content2 + str(
@@ -197,15 +197,14 @@ def consoleFunc():
             consoleMode = True
         if consoleMode:
             while True:
-                a = input()
-                if a == "quit":
+                command = input()
+                if command == "quit":
                     preferencesFile = open("preferences.json", "r+")
                     print(f"{color.PURPLE}quitting console{color.END}")
                     consoleMode = False
                     break
                 else:
-                    console.main(a)
-
+                    console.main(command)
 
 
 def dailyRoutine():
