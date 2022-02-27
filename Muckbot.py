@@ -16,12 +16,6 @@ from colors import color
 import DA_SECRETS
 import console
 
-# bot information:
-client_id = DA_SECRETS.client_id
-client_secret = DA_SECRETS.client_secret
-username = DA_SECRETS.username
-password = DA_SECRETS.password
-user_agent = "u/hananelroe's and u/HoseanRC's comment chains breaker bot"
 
 # details about the bot to send after every comment
 credit = "\n______\n ^(I'm just a simple bot that wants to stop muck chains, [here is my github page](https://github.com/hananelroe/muck-chains-stopper-bot)\
@@ -34,6 +28,8 @@ good_bot = "thanks! :)"  # thanks comment for "good bot"
 
 fixed_comment = ""  # fixing comments to get better muck results
 
+unwanted_characters = [" ", ",", ".", "\n", "\'"]
+
 mucks_Counter = 0
 yesterday_Mucks = 0
 mucks_count_content1 = "**you have summoned me to show you the state of this sub**\n\ntoday I have counted **"  # the Asterisks are for bolding the counters' numbers
@@ -43,7 +39,7 @@ mucks_count_disclaimer = "^(I don't reply to all mucks, but I do count both muck
 consoleMode = False
 
 preferencesFile = open("preferences.json", "r+")
-
+preferences = json.load(preferencesFile)
 
 class author:
     def __init__(self):
@@ -79,7 +75,7 @@ def noglyph(s):  # removes any glyph from a character (ex. ý -> y, Ŕ -> R)
 
 
 def printComment(comment, fixed_comment, authorName):
-    if authorName != username:
+    if authorName != preferences["username"]:
         print(color.PURPLE + comment + " "  # prints the original comment, the fixed one,
               + color.BLUE + fixed_comment  # and the fixed comment similarity to "muck"
               + f" {color.END}" + str(fuzz.ratio(fixed_comment, "muck")) + "%"
@@ -127,29 +123,34 @@ def savePreferences(file, data):
 
 
 def main():
-    global fixed_comment, mucks, mucks_Counter, yesterday_Mucks, consoleMode
-    preferences = json.load(preferencesFile)
+    global fixed_comment, mucks, mucks_Counter, yesterday_Mucks, consoleMode, preferences
 
     # for every new comment:
     for comment in subreddit.stream.comments(skip_existing=True):
         if consoleMode:
             break  # we shouldn't run the bot when using the console
 
-        # removing glyghps, spaces and new lines:
-        fixed_comment = noglyph("".join(dict.fromkeys(comment.body.lower()))).replace(" ", "").replace("\n", "")
+        fixed_comment = comment.body.lower()
+
+        # removing unwanted characters:
+        for character in unwanted_characters:
+            fixed_comment = fixed_comment.replace(character, "")
+
+        # removing glyphs:
+        fixed_comment = noglyph("".join(dict.fromkeys(fixed_comment)))
 
         # print comment details:
         printComment(comment.body, fixed_comment, comment.author.name)
 
         # skip the comment check if the commenter is the bot or the user is blocked:
-        if comment.author.name == username:
+        if comment.author.name == preferences["username"]:
             continue
         if comment.author.name.lower() in preferences["blocked users"]:
             print(f"{color.RED}USER BLOCKED{color.END}")
             continue
 
         # when someone mentions the bot:
-        if comment.body.lower() == f"u/{DA_SECRETS.username.lower()}":
+        if comment.body.lower() == f"u/{preferences['username'].lower()}":
             if int(yesterday_Mucks) < int(mucks_Counter):  # if today there were more mucks than yesterday:
                 print(f"{color.CYAN}someone mentioned me! {color.RED}and it gets worse...{color.END}")
                 comment.reply(mucks_count_content1 + str(mucks_Counter) + mucks_count_content2 + str(
@@ -160,7 +161,7 @@ def main():
                     yesterday_Mucks) + "** mucks. we're getting better!\n\n" + mucks_count_disclaimer)
 
         # if the comment replied to the bot:
-        if parent(comment).author.name == username:
+        if parent(comment).author.name == preferences["username"]:
             if comment.body.lower() == "bad bot:":
                 print(f"{color.GREEN} bad bot MATCH! replying...{color.END}\n")
                 reply(comment, bad_bot, credit)
@@ -215,24 +216,24 @@ def dailyRoutine():
 
 if __name__ == '__main__':
     # creating an authorized reddit instance from the given data
-    reddit = praw.Reddit(client_id=client_id,
-                         client_secret=client_secret,
-                         username=username,
-                         password=password,
-                         user_agent=user_agent)
+    reddit = praw.Reddit(client_id=preferences["client ID"],
+                         client_secret=preferences["client secret"],
+                         username=preferences["username"],
+                         password=preferences["password"],
+                         user_agent=preferences["user agent"])
 
     # selects the subreddit to read the comments from
-    subreddit = reddit.subreddit(DA_SECRETS.subreddit_name)
-    print(f"{color.GREEN}online{color.END}")  # prints green "online"
+    subreddit = reddit.subreddit(preferences["subreddit name"])
+    print(f"{color.GREEN}online{color.END}")
 
     try:
         mainThread = Thread(target=main)
         routineThread = Thread(target=dailyRoutine)
-        consoleTread = Thread(target=consoleFunc)
+        '''consoleTread = Thread(target=consoleFunc)'''  # the console doesn't really work, I might fix it in the future
 
         mainThread.start()
         routineThread.start()
-        consoleTread.start()
+        '''consoleTread.start()'''
 
     except KeyboardInterrupt:  # Ctrl-C - stop
         savePreferences(preferencesFile, preferences)
