@@ -1,4 +1,10 @@
 {
+    "client ID": "<client ID>",
+    "client secret": "<client secret>",
+    "username": "<username>",
+    "password": "<password>",
+    "subreddit name": "<subreddit name>",
+    "user agent": "<user agent>",
     "muck list": [
         "muck",
         "muck.",
@@ -11,7 +17,7 @@
         "mcuk"
     ],
     "blocked users": [
-        "username"
+        "automoderator"
     ],
-    "reduce comments": true
+    "reduce comments": false
 }
