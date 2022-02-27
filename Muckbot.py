@@ -1,4 +1,5 @@
 # this bot was made by u/hananelroe on reddit
+import collections
 import warnings
 warnings.filterwarnings('ignore', '.*slow pure-python SequenceMatcher.*')
 import thefuzz.fuzz as fuzz
@@ -44,17 +45,16 @@ consoleMode = False
 preferencesFile = open("preferences.json", "r+")
 
 
-class author():
-    pass
-
-
-class EmptyComment():  # Empty comment class for parent function
+class author:
     def __init__(self):
-        self.body = None  # a fake "body" attribute
+        self.name = None
+
+class EmptyComment:  # Empty comment class for parent function
+    def __init__(self):
+        # fake attributes:
+        self.body = None
         self.author = author()
         self.author.name = None
-
-    pass
 
 
 def parent(child_comment):  # gets comment's parent (aka the comment it replied to)
