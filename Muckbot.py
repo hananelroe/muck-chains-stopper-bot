@@ -13,7 +13,6 @@ import pytz
 import schedule
 import json
 from colors import color
-import DA_SECRETS
 import console
 
 
