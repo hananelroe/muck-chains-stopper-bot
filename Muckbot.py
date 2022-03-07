@@ -17,17 +17,18 @@ import console
 
 
 # details about the bot to send after every comment
-credit = "\n______\n ^(I'm just a simple bot that wants to stop muck chains, [here is my github page](https://github.com/hananelroe/muck-chains-stopper-bot)\
+credit = "\n______\n ^(I'm just a simple bot that wants to stop \"muck\" and \"that was really cool\" chains, [here is my github page](https://github.com/hananelroe/muck-chains-stopper-bot)\
 , you can see my source code and submit my issues there)\n\n ^(I'm a collaboration between [Hananelroe](https://www.reddit.com/u/Hananelroe) and [HoseanRC]\
 (https://www.reddit.com/u/HoseanRC))\n\n^([visit my website](https://www.reddit.com/r/Damnthatsinteresting/comments/ovp6t1/never_gonna_give_you_up_by_rick_astley_remastered))"
 
 shut = "#**SHUT**"  # shut comment for m***
+thatWasntCool = "that was cool, but your chain isn\'t"
 bad_bot = "WHY?"  # WHY? comment for "bad bot"
 good_bot = "thanks! :)"  # thanks comment for "good bot"
 
 fixed_comment = ""  # fixing comments to get better muck results
 
-unwanted_characters = [" ", ",", ".", "\n", "\'"]
+unwanted_characters = [" ", ",", ".", "\n", "\'", "!", "@"]
 
 mucks_Counter = 0
 yesterday_Mucks = 0
@@ -42,14 +43,14 @@ preferences = json.load(preferencesFile)
 
 class author:
     def __init__(self):
-        self.name = None
+        self.name = ""
 
 class EmptyComment:  # Empty comment class for parent function
     def __init__(self):
         # fake attributes:
-        self.body = None
+        self.body = ""
         self.author = author()
-        self.author.name = None
+        self.author.name = ""
 
 
 def parent(child_comment):  # gets comment's parent (aka the comment it replied to)
@@ -72,13 +73,24 @@ def noglyph(s):  # removes any glyph from a character (ex. ý -> y, Ŕ -> R)
     return ''.join(c for c in unicodedata.normalize('NFD', s)
                    if unicodedata.category(c) != 'Mn')
 
+def fixComment(comment):
+    fixed = comment.body.lower()
+    # removing unwanted characters:
+    for character in unwanted_characters:
+        fixed = fixed.replace(character, "")
+    # removing glyphs:
+    fixed = noglyph("".join(dict.fromkeys(fixed)))
+    return fixed
+
 
 def printComment(comment, fixed_comment, authorName):
     if authorName != preferences["username"]:
-        print(color.PURPLE + comment + " "  # prints the original comment, the fixed one,
-              + color.BLUE + fixed_comment  # and the fixed comment similarity to "muck"
-              + f" {color.END}" + str(fuzz.ratio(fixed_comment, "muck")) + "%"
-              + f"\nu/{color.CYAN}{authorName}{color.END}\n")
+        print(color.PURPLE, comment, color.BLUE, fixed_comment, color.END,  # prints comment, fixed comment,
+              f" \"muck\" similarity:",
+              color.RED, str(fuzz.ratio(fixed_comment, "muck")), "%", color.END,  # "muck" similarity,
+              " \"wow that was really cool\" similarity:",
+              color.RED, (fuzz.ratio(fixed_comment, "wothasrelyc")), "%", color.END,  # "wow that was really cool" similarity
+              f"\nu/{color.CYAN}{authorName}{color.END}\n")  # and author name
 
 
 def reply(comment, content, credit):  # replies with/without credit according to the chain's length
@@ -129,14 +141,7 @@ def main():
         if consoleMode:
             break  # we shouldn't run the bot when using the console
 
-        fixed_comment = comment.body.lower()
-
-        # removing unwanted characters:
-        for character in unwanted_characters:
-            fixed_comment = fixed_comment.replace(character, "")
-
-        # removing glyphs:
-        fixed_comment = noglyph("".join(dict.fromkeys(fixed_comment)))
+        fixed_comment = fixComment(comment)
 
         # print comment details:
         printComment(comment.body, fixed_comment, comment.author.name)
@@ -167,9 +172,18 @@ def main():
             elif comment.body.lower() == "good bot":
                 print(f"{color.GREEN}good bot MATCH! replying...{color.END}")
                 reply(comment, good_bot, credit)
+
+        # "wow that was really cool" chain detection:
+        elif fuzz.ratio(fixed_comment, "wothasrelyc") > 70:  # "wothasrelyc" is "wow that was really cool" after the comment processing
+            if fuzz.ratio(fixComment(parent(comment)),
+                          fixed_comment) > 80:  # only triggers if it's a part of a chain (parent comment needs to be similar)
+                print(
+                    f"{color.RED}\"wow that was really cool\" chain DETECTED! {color.GREEN}replying...{color.END}")
+                reply(comment, thatWasntCool, credit)
+        # muck detection:
         else:
             for item in preferences["muck list"]:
-                # if the comment is >74% "muck" and starts/ends with "m"/"k":
+                # if the comment is >74% "muck" and starts with "m"/"k":
                 if fuzz.ratio(fixed_comment, item) > 74 and fixed_comment[0] in "mk":
                     if preferences["reduce comments"]:
                         if random.randrange(1, 5) == 1:  # roughly 1 out of 5 comments:
