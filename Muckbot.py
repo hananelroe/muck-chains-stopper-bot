@@ -26,9 +26,12 @@ thatWasntCool = "that was cool, but your chain isn\'t"
 bad_bot = "WHY?"  # WHY? comment for "bad bot"
 good_bot = "thanks! :)"  # thanks comment for "good bot"
 
+consoleMSG = f"{color.PURPLE}console mode\n{color.RED}WARNING: the bot stops working when you are in the console mode." \
+             f" to make him work again, quit the console by typing \"quit\"{color.END}"
+
 fixed_comment = ""  # fixing comments to get better muck results
 
-unwanted_characters = [" ", ",", ".", "\n", "\'", "!", "@"]
+unwanted_characters = [" ", ",", ".", "\n", "\'", "!", "@"]  # the characters in this list will be ignored by the bot
 
 mucks_Counter = 0
 yesterday_Mucks = 0
@@ -210,7 +213,7 @@ def consoleFunc():
     while True:
         if input() == "console" and consoleMode == False:
             print("\n" * 100)  # to clear all other outputs
-            print(f"{color.PURPLE}console mode{color.END}")
+            print(consoleMSG)
             console.preferences = preferences
             consoleMode = True
         if consoleMode:
