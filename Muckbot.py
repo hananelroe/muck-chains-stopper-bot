@@ -138,6 +138,8 @@ def savePreferences(file, data):
 
 def main():
     global fixed_comment, mucks, mucks_Counter, yesterday_Mucks, consoleMode, preferences
+    if preferences["reduce comments"] == False:
+        print(f"{color.RED}{color.BOLD}comment reduction is off{color.END}")
 
     # for every new comment:
     for comment in subreddit.stream.comments(skip_existing=True):
