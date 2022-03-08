@@ -31,9 +31,10 @@ commandsMap = {
     "quit": ["",  # command output
              "quits console",  # command description
              not_a_func],  # command function
-    "print mucks": [f"mucks counted today: {muckbot.mucks_Counter}\nmucks counted yesterday: {muckbot.yesterday_Mucks}",
-                    "prints the muck counted today and yesterday",
-                    not_a_func],
+    "print counters": [f"\"muck\":\ntoday: {muckbot.mucks_Counter}, yesterday: {muckbot.yesterday_Mucks}\n\n"
+                       f"\"wow that was really cool\":\ntoday: {muckbot.wowThatWasReallyCoolCount}, yesterday: {muckbot.yesterday_WowThatWasReallyCool}\n",
+                       "prints today\'s and yesterday\'s counters",
+                       not_a_func],
     "block": [f"{color.RED}enter user name to block{color.END}\n(without u/)",
               "blocks a given user",
               blockUser
