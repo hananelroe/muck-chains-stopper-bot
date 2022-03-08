@@ -4,7 +4,7 @@ import muckbot
 from colors import color
 
 blockedUser = ""
-preferences = None
+preferences = None  # this one gets updated when we call the console from muckbot.py
 
 
 def not_a_func():
@@ -28,9 +28,9 @@ def unblockUser():
 
 
 commandsMap = {
-    "quit console": ["",  # command output
-                     "quits console",  # command description
-                     not_a_func],  # command function
+    "quit": ["",  # command output
+             "quits console",  # command description
+             not_a_func],  # command function
     "print mucks": [f"mucks counted today: {muckbot.mucks_Counter}\nmucks counted yesterday: {muckbot.yesterday_Mucks}",
                     "prints the muck counted today and yesterday",
                     not_a_func],
