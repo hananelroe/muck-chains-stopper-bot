@@ -32,10 +32,8 @@ unwanted_characters = [" ", ",", ".", "\n", "\'", "!", "@"]
 
 mucks_Counter = 0
 yesterday_Mucks = 0
-mucks_count_content1 = "**you have summoned me to show you the state of this sub**\n\ntoday I have counted **"  # the Asterisks are for bolding the counters' numbers
-mucks_count_content2 = "** mucks.\n\nyesterday I have counted **"
-mucks_count_disclaimer = "^(I don't reply to all mucks, but I do count both mucks that are a part of a chain and mucks that aren't, and the count resets every day.) \n\n^(if you've noticed a problem or want to contribute to my code, [here is my GitHub page](https://github.com/hananelroe/muck-chains-stopper-bot))"
-
+wowThatWasReallyCoolCount = 0
+yesterday_WowThatWasReallyCool = 0
 consoleMode = False
 
 preferencesFile = open("preferences.json", "r+")
@@ -104,10 +102,12 @@ def reply(comment, content, credit):  # replies with/without credit according to
         comment.reply(content)  # else than comment bad_bot without credit
 
 
-def resetMuckCount():
-    global yesterday_Mucks, mucks_Counter
+def resetCounts():
+    global yesterday_Mucks, mucks_Counter, yesterday_WowThatWasReallyCool, wowThatWasReallyCoolCount
     yesterday_Mucks = mucks_Counter
     mucks_Counter = 0
+    yesterday_WowThatWasReallyCool = wowThatWasReallyCoolCount
+    wowThatWasReallyCoolCount = 0
     print("resetting muck count...")
 
 
@@ -155,14 +155,12 @@ def main():
 
         # when someone mentions the bot:
         if comment.body.lower() == f"u/{preferences['username'].lower()}":
-            if int(yesterday_Mucks) < int(mucks_Counter):  # if today there were more mucks than yesterday:
-                print(f"{color.CYAN}someone mentioned me! {color.RED}and it gets worse...{color.END}")
-                comment.reply(mucks_count_content1 + str(mucks_Counter) + mucks_count_content2 + str(
-                    yesterday_Mucks) + "** mucks. it gets worse...\n\n" + mucks_count_disclaimer)
-            else:
-                print(f"{color.CYAN} someone mentioned me! {color.GREEN}and it gets better!{color.END}")
-                comment.reply(mucks_count_content1 + str(mucks_Counter) + mucks_count_content2 + str(
-                    yesterday_Mucks) + "** mucks. we're getting better!\n\n" + mucks_count_disclaimer)
+            print(f"{color.CYAN}someone mentioned me!{color.END}")
+            comment.reply(f"**you have summoned me to show you the state of this sub**\n\n"
+                          f"today I have counted **{mucks_Counter}** mucks and **{wowThatWasReallyCoolCount}** \"wow that was really cool\" chains.\n\n"
+                          f"yesterday I have counted **{yesterday_Mucks}** mucks and **{yesterday_WowThatWasReallyCool}** \"wow that was really cool\" chains.\n\n"
+                          f"^(I don't reply to all comments, but I do count both comments that are a part of a chain and comments that aren't, and the count resets every day.) \n\n"
+                          f"^(if you've noticed a problem or want to contribute to my code, [here is my GitHub page](https://github.com/hananelroe/muck-chains-stopper-bot))")
 
         # if the comment replied to the bot:
         if parent(comment).author.name == preferences["username"]:
@@ -175,11 +173,17 @@ def main():
 
         # "wow that was really cool" chain detection:
         elif fuzz.ratio(fixed_comment, "wothasrelyc") > 70:  # "wothasrelyc" is "wow that was really cool" after the comment processing
-            if fuzz.ratio(fixComment(parent(comment)),
-                          fixed_comment) > 80:  # only triggers if it's a part of a chain (parent comment needs to be similar)
-                print(
-                    f"{color.RED}\"wow that was really cool\" chain DETECTED! {color.GREEN}replying...{color.END}")
-                reply(comment, thatWasntCool, credit)
+            if fuzz.ratio(fixComment(parent(comment)), fixed_comment) > 80:  # only triggers if it's a part of a chain (parent comment needs to be similar)
+                if preferences["reduce comments"]:
+                    if random.randrange(1, 5) == 1:  # roughly 1 out of 5 comments:
+                        print(f"{color.RED}\"wow that was really cool\" chain DETECTED! {color.GREEN}replying...{color.END}")
+                        reply(comment, thatWasntCool, credit)
+                    else:
+                        print(f"{color.RED}\"wow that was really cool\" chain DETECTED, but not replying.{color.END}")
+                else:
+                    print(f"{color.RED}\"wow that was really cool\" chain DETECTED! {color.GREEN}replying...{color.END}")
+                    reply(comment, thatWasntCool, credit)
+
         # muck detection:
         else:
             for item in preferences["muck list"]:
@@ -207,13 +211,14 @@ def consoleFunc():
         if input() == "console" and consoleMode == False:
             print("\n" * 100)  # to clear all other outputs
             print(f"{color.PURPLE}console mode{color.END}")
-            preferencesFile.close()
+            console.preferences = preferences
             consoleMode = True
         if consoleMode:
             while True:
                 command = input()
                 if command == "quit":
-                    preferencesFile = open("preferences.json", "r+")
+                    console.preferences = preferences  # save changes like blocked users to memory
+                    savePreferences(preferencesFile, preferences)
                     print(f"{color.PURPLE}quitting console{color.END}")
                     consoleMode = False
                     break
@@ -222,7 +227,7 @@ def consoleFunc():
 
 
 def dailyRoutine():
-    schedule.every().day.at(getUTCMidnight()).do(resetMuckCount, )
+    schedule.every().day.at(getUTCMidnight()).do(resetCounts, )
     while True:
         schedule.run_pending()
 
@@ -242,11 +247,11 @@ if __name__ == '__main__':
     try:
         mainThread = Thread(target=main)
         routineThread = Thread(target=dailyRoutine)
-        '''consoleTread = Thread(target=consoleFunc)'''  # the console doesn't really work, I might fix it in the future
+        consoleTread = Thread(target=consoleFunc)  # the console doesn't really work, I might fix it in the future
 
         mainThread.start()
         routineThread.start()
-        '''consoleTread.start()'''
+        consoleTread.start()
 
     except KeyboardInterrupt:  # Ctrl-C - stop
         savePreferences(preferencesFile, preferences)
