@@ -24,7 +24,7 @@ def unblockUser():
     try:
         preferences["blocked users"].remove(str(user).lower())
     except:
-        print(f"{color.RED}\"{user}\" wasn't fount in the blacklist{color.END}")
+        print(f"{color.RED}\"{user}\" wasn't found in the blacklist{color.END}")
 
 
 commandsMap = {
