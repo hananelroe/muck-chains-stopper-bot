@@ -7,6 +7,6 @@ to use the bot add your reddit account's cedentials to preferences.json, then op
 <code>python.exe ./muckbot.py</code>
 # new update: console controls!
 
-to use, type "console" and press <kbd>ENTER</kbd>. you've now entered console mode. try typing "help" for the commands list!
+to use, type "console" and press <kbd>ENTER</kbd>. you've now entered console mode. try typing "help" for the commands list!, just keep in mind that the bot doesn't run while you are in console mode
 
 **(if you want to contibute a new command to the console, please keep the current code format)**
