@@ -7,15 +7,10 @@ warnings.filterwarnings('ignore', '.*slow pure-python SequenceMatcher.*')
 import thefuzz.fuzz as fuzz
 import praw
 import unicodedata
-import random
 import sys
 from threading import Thread
-import datetime
-import pytz
-import schedule
 import json
 from colors import color
-import console
 
 # the counter will increase the counter variables instead of replying to comments
 thatWasCoolChains = 0
