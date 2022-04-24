@@ -17,15 +17,6 @@ thatWasCoolChains = 0
 muckCounts = 0
 totalComments = 0
 
-# details about the bot to send after every comment
-credit = "\n______\n ^(I'm a bot that stops \"muck\" and \"wow that was really cool\" chains)\n\n" \
-         "[GitHub](https://github.com/hananelroe/muck-chains-stopper-bot)^([report an issue](https://github.com/hananelroe/muck-chains-stopper-bot/issues/new))\n\n" \
-         "^([visit my website](https://www.reddit.com/r/Damnthatsinteresting/comments/ovp6t1/never_gonna_give_you_up_by_rick_astley_remastered))"
-
-shut = "#**SHUT**"  # shut comment for m***
-thatWasntCool = "that was cool, but your chain isn\'t."
-bad_bot = "WHY?"  # WHY? comment for "bad bot"
-good_bot = "thanks! :)"  # thanks comment for "good bot"
 
 consoleMSG = f"{color.PURPLE}console mode\n{color.RED}WARNING: the bot stops working when you are in the console mode." \
              f" to make him work again, quit the console by typing \"quit\"{color.END}"
