@@ -2,9 +2,9 @@
 a bot that stops muck chains
 
 # forking rules: if you copy my code, you have to:
-# 1.fork it via GitHub
-# 2. keep the comment with this repository's link in the code
-# 3. keep your bot's code open source
+**1.fork it via GitHub
+**2. keep the comment with this repository's link in the code
+**3. keep your bot's code open source
 
 this is the source code of [u/DaniDevChainBreaker](https://www.reddit.com/user/DaniDevChainBreaker/) (the main [r/DaniDev](https://www.reddit.com/r/DaniDev/) muck chains breaker)
 
