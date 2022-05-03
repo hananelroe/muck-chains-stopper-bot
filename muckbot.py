@@ -1,4 +1,5 @@
 # this bot was made by u/hananelroe on reddit
+# GitHub link: https://github.com/hananelroe/muck-chains-stopper-bot
 import collections
 import warnings
 warnings.filterwarnings('ignore', '.*slow pure-python SequenceMatcher.*')
