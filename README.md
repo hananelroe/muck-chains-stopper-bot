@@ -1,6 +1,8 @@
 # muck-chains-stopper-bot
 a bot that stops muck chains
 
+# forking rules: if you copy my code, you have to fork it via GitHub and keep the comment with this repository's link in the code. that's it.
+
 this is the source code of [u/DaniDevChainBreaker](https://www.reddit.com/user/DaniDevChainBreaker/) (the main [r/DaniDev](https://www.reddit.com/r/DaniDev/) muck chains breaker)
 
 to use the bot add your reddit account's cedentials to preferences.json, then open CMD, navigate to the directory containing the file and run:
