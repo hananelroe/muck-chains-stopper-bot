@@ -170,7 +170,7 @@ def main():
 
         # if the comment replied to the bot:
         if parent(comment).author.name == preferences["username"]:
-            if comment.body.lower() == "bad bot:":
+            if comment.body.lower() == "bad bot":
                 print(f"{color.GREEN} bad bot MATCH! replying...{color.END}\n")
                 reply(comment, bad_bot, credit)
             elif comment.body.lower() == "good bot":
