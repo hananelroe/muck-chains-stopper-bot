@@ -3,7 +3,7 @@ a bot that stops muck chains
 
 ---
 # forking rules: if you copy my code, you have to:
-**1.fork it via GitHub**
+**1. fork it via GitHub**
 
 **2. keep the comment with this repository's link in the code**
 
