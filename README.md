@@ -14,7 +14,7 @@ a bot that stops muck chains
 
 this is the source code of [u/DaniDevChainBreaker](https://www.reddit.com/user/DaniDevChainBreaker/), a bot that used to break comment chains on [r/DaniDev](https://www.reddit.com/r/danidev). ([he's retired now :)](https://www.reddit.com/r/DaniDev/comments/uhbkfs/udanidevchainbreaker_is_officially_down_its_been/))
 
-to use the bot add your reddit account's cedentials to preferences.json, then open CMD, navigate to the directory containing the file and run:
+to use the bot add your reddit account's cedentials to <kbd>preferences.json</kbd>, then open CMD, navigate to the directory containing the file and run:
 <code>python.exe ./muckbot.py</code>
 # console controls:
 
